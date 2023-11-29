@@ -122,15 +122,20 @@ export class AiChatService {
   async chatFlowise(userId: string, body: IChatInput) {
     // console.log(userId, body);
     const response = {
-      message: (await this.requestToFlowiseAIServer({
-        method: 'POST',
-        data: {
-          question: body.message,
-          overrideConfig: {
-            memoryKey: userId,
+      message: (
+        (await this.requestToFlowiseAIServer({
+          method: 'POST',
+          data: {
+            question: body.message,
+            overrideConfig: {
+              memoryKey: userId,
+            },
           },
-        },
-      })) as string,
+        })) as {
+          text: string;
+          sourceDocument: string;
+        }
+      ).text,
     };
 
     if (!this.chatLogs[userId]) {
