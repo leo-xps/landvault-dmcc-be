@@ -1,6 +1,6 @@
 #  Dockerfile for Node Express Backend api (development)
 
-FROM node:16.18-alpine
+FROM node:18-alpine
 
 ARG NODE_ENV=development
 
