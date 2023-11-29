@@ -26,6 +26,7 @@ import { RpmModule } from './rpm/rpm.module';
 import { ServerTokensModule } from './server-tokens/server-tokens.module';
 import { UsersModule } from './users/users.module';
 import { HealthModule } from './health/health.module';
+import { CalendlyApiModule } from './calendly-api/calendly-api.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { HealthModule } from './health/health.module';
     DownloadModule,
     CsvGenModule,
     HealthModule,
+    CalendlyApiModule,
   ],
   controllers: [],
   providers: [

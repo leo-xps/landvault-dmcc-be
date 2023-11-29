@@ -252,7 +252,7 @@ export class AiChatService {
     const { data } = await firstValueFrom(
       this.httpService
         .request<T>({
-          url: 'https://flowisesrv01.app01.xyzapps.xyz/api/v1/prediction/f9712a55-391d-4a7f-94bc-d01f6006860e',
+          url: 'https://flowise.app01.xyzapps.xyz/api/v1/prediction/37f936d2-83ca-4925-b80b-d41d9d04da73',
           ...request_data,
           headers: {
             'Content-Type': 'application/json',

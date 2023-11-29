@@ -14,7 +14,7 @@ export class AiChatController {
   @UseGuards(RestAuthGuard)
   async chatSend(@CurrentUser('id') userId: string, @Body() body: IChatInput) {
     // call ai chat here
-    return await this.aiChatService.chatChatbase(userId, body);
+    return await this.aiChatService.chatFlowise(userId, body);
   }
 
   @Post('stream')
