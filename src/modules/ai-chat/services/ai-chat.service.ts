@@ -122,30 +122,33 @@ export class AiChatService {
   async chatFlowise(userId: string, body: IChatInput) {
     // console.log(userId, body);
     const response = {
-      message: (
-        (await this.requestToFlowiseAIServer({
-          method: 'POST',
-          data: {
-            question: body.message,
-            overrideConfig: {
-              memoryKey: userId,
-            },
+      message: (await this.requestToFlowiseAIServer({
+        method: 'POST',
+        data: {
+          question: body.message,
+          overrideConfig: {
+            memoryKey: userId,
           },
-        })) as {
-          text: string;
-          sourceDocument: string;
-        }
-      ).text,
+        },
+      })) as {
+        text: string;
+        sourceDocument: string;
+      },
     };
+
+    console.log(response);
+
+    const responseText = response.message.text;
 
     if (!this.chatLogs[userId]) {
       this.chatLogs[userId] = [];
     }
 
+    console.log();
     this.chatLogs[userId].push(`You: ${body.message}`);
-    this.chatLogs[userId].push(`AI: ${response.message}`);
+    this.chatLogs[userId].push(`AI: ${responseText}`);
 
-    return response;
+    return responseText;
   }
 
   async emailChat(userId: string) {
