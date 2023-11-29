@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Password Reset</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">Password Reset</div>
+            <div class="card-body">
+              <p>Resetting Password for Account:</p>
+              <p><b id="emailToReset" style="padding-left: 10px">--</b></p>
+              <form onsubmit="return onsubmitHandler(event)">
+                <div class="form-group">
+                  <label for="email">New Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    placeholder="Enter your new Password"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="email">Confirm New Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="confirm-password"
+                    placeholder="Confirm Your Password"
+                  />
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  Send Reset Link
+                </button>
+              </form>
+              <div id="toast-here"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const onsubmitHandler = (e) => {
+        e.preventDefault();
+        const password = document.getElementById('password').value;
+        const confirmPassword =
+          document.getElementById('confirm-password').value;
+        if (password !== confirmPassword) {
+          alert('Password does not match');
+          return;
+        }
+        // get token from the url
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        fetch('/api/users/forgot-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            token,
+            newPassword: password,
+          }),
+        })
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            if (data.data) {
+              // alert('Password Reset Successful');
+              // replace card body with success message
+              document.querySelector('.card-body').innerHTML = `
+              <div class="alert alert-success" role="alert">
+                Password Reset Successful
+              </div>
+              `;
+            } else {
+              alert('Password Reset Failed');
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            alert('Password Reset Failed');
+          });
+      };
+    </script>
+
+    <script src="
+    https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js
+    "></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      // get token from the url
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+      var decoded = jwt_decode(token);
+
+      // console.log(decoded);
+      document.getElementById(
+        'emailToReset',
+      ).innerText = `${decoded.email} (${decoded.username})`;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "CANT_CREATE_AGORACHAT_USER": {
+    "message": "Can't create AgoraChat user. Agora Server Error!",
+    "errorCode": "AGC-001"
+  },
+  "INVALID_INPUT": {
+    "message": "You supplied wrong input. Please check your input",
+    "errorCode": "AGC-002"
+  },
+  "CANT_LOGIN": {
+    "message": "Can't login. Please contact costumer support",
+    "errorCode": "AGC-003"
+  },
+  "USER_NOT_FOUND": {
+    "message": "[AGORA] User not found",
+    "errorCode": "AGC-004"
+  }
+}

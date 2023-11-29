@@ -1,0 +1,16 @@
+# This is an example Starter pipeline configuration
+# Use a skeleton to build, test and deploy using manual and parallel steps
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+
+image: atlassian/default-image:3
+
+pipelines:
+  branches:
+    '{deploy}':
+      - step:
+          name: 'Call Webhook From Caprover'
+          script:
+            - echo "Call Webhook From Caprover"
+          after-script:
+            - if [[ $BITBUCKET_EXIT_CODE -eq 0 ]]; then curl -X POST "https://captain.int.lv-aws-x3.xyzapps.xyz/api/v2/user/apps/webhooks/triggerbuild?namespace=captain&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InRva2VuVmVyc2lvbiI6ImEzMjFlYTI4LTgwMWEtNDgyMy05ZmZkLWU3Y2ZjZWZjNzZkMCIsImFwcE5hbWUiOiJkZXYtbGFuZHZhdWx0LWJlIiwibmFtZXNwYWNlIjoiY2FwdGFpbiJ9LCJpYXQiOjE2OTIxMDY0NDh9.nGqVG9xtjhGBiBReUcEgPgsD7uwGGXvih-EDdatpKng" ; else echo "Step failed"; fi

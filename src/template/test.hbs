@@ -1,0 +1,117 @@
+<html>
+  <head>
+    <style>
+      /* Add any inline styling here */ html { font-family: sans-serif,
+      'Roboto'; } .border { border: 1px solid grey; } a { text-decoration: none;
+      }
+    </style>
+  </head>
+  <body
+    style="margin: 0; padding: 0; background-color: #192A56; font-family: 'Roboto', Arial, sans-serif; color: #fff; height:100vh;"
+  >
+
+    <table
+      role='presentation'
+      width='100%'
+      cellspacing='0'
+      cellpadding='0'
+      border='0'
+    >
+      <tr>
+        <td style='padding-top: 100px;' align='center' valign='center'>
+          <table
+            role='presentation'
+            cellspacing='0'
+            cellpadding='0'
+            border='0'
+            style='background-color: #273C68; border-radius: 8px; border: 1px solid #364D7E;'
+          >
+            <tr>
+              <td
+                width='300'
+                style='padding: 40px; '
+                colspan=''
+                align='top'
+                valign='top'
+              >
+                <div
+                  style='font-size: 18px; font-weight: bold; color: #A8C3E5;'
+                >Meeting Invitation </div>
+                <p
+                  style='font-size: 14px; c4:00 pmolor: #BBD4F2; line-height:18px; color: #BBD4F2; font-weight:bold;'
+                >
+                  {{params.title}}
+                </p>
+
+                <div
+                  style='font-size: 18px; font-weight: bold; color: #A8C3E5;'
+                >When</div>
+                <p
+                  style='font-size: 14px; c4:00 pmolor: #BBD4F2; line-height:18px; color: #BBD4F2;'
+                >
+                  {{params.date}}
+                  {{params.startTime}}
+                  -
+                  {{params.endTime}}
+                  <br />
+                  ID:
+                  {{params.code}}
+                </p>
+
+                <div
+                  style='font-size: 18px; font-weight: bold; color: #A8C3E5;'
+                >Guests</div>
+                <p style='font-size: 14px; color: #BBD4F2; line-height:18px;'>
+                  <!--user@gmail.com<br>-->
+                  <!--user@gmail.com<br>-->
+                  <!--user@gmail.com<br>-->
+                  <!--user@gmail.com<br>-->
+                  <!--user@gmail.com<br>-->
+                  <!--user@gmail.com<br>-->
+                  <!--user@gmail.com-->
+
+                  {% for guest in params.guest %}
+                  {{guest}}<br />
+                  {% endfor %}
+                </p>
+                <a
+                  href='#'
+                  style='font-size: 14px; color: #88ccff; font-weight: bold;'
+                >View all guest info</a>
+              </td>
+              <td style='padding: 40px; ' width='200' align='top' valign='top'>
+                <div>
+                  <a
+                    href='{{params.url}}'
+                    style='display: inline-block; background-color: #88ccff; color: #000; font-size: 14px; font-weight: bold; padding: 10px 20px; border-radius: 4px; text-decoration: none; color:#192a56;'
+                  >Join with Landvault</a>
+                </div>
+
+                <div>
+                  <div
+                    style='font-size: 18px; font-weight: bold; color: #A8C3E5; margin-top: 30px; margin-bottom: 5px;'
+                  >Meeting link</div>
+                  <a
+                    href='{{params.url}}'
+                    style='color: #BBD4F2;'
+                  >{{params.url}}</a>
+                </div>
+                <br />
+                <div>
+                  <div
+                    style='font-size: 18px; font-weight: bold; color: #A8C3E5; margin-bottom: 5px;'
+                  >Location</div>
+                  <div style='font-size: 14px; color: #BBD4F2;'>
+                    {{params.location}}
+                  </div>
+                </div>
+
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+  </body>
+</html>

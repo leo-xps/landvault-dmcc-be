@@ -1,0 +1,10 @@
+{
+  "NOT_FOUND": {
+    "message": "Appointment not found!",
+    "errorCode": "AP-001"
+  },
+  "NOT_INVITED": {
+    "message": "Not invited in appointment!",
+    "errorCode": "AP-002"
+  }
+}

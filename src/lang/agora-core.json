@@ -1,0 +1,6 @@
+{
+  "REQUEST_ERROR": {
+    "message": "Request error",
+    "errorCode": "AG-001"
+  }
+}

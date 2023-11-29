@@ -1,0 +1,6 @@
+{
+  "GENERAL.INPUT_ERROR": {
+    "message": "Please recheck your input data",
+    "errorCode": "GEN-001"
+  }
+}

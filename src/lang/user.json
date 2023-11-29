@@ -1,0 +1,26 @@
+{
+  "INVALID_CREDENTIALS": {
+    "message": "Invalid Credentials",
+    "errorCode": "US-001"
+  },
+  "EMAIL_ALREADY_REGISTERED": {
+    "message": "Email already registered!",
+    "errorCode": "US-002"
+  },
+  "USER_NOT_FOUND": {
+    "message": "User not found!",
+    "errorCode": "US-003"
+  },
+  "NOT_VERIFIED": {
+    "message": "User not verified",
+    "errorCode": "US-004"
+  },
+  "INVALID_OLD_PASSWORD": {
+    "message": "Invalid Old Password",
+    "errorCode": "US-005"
+  },
+  "USERNAME_ALREADY_REGISTERED": {
+    "message": "Username already exist!",
+    "errorCode": "US-006"
+  }
+}

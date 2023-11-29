@@ -1,0 +1,10 @@
+{
+  "INVALID_CODE": {
+    "message": "Invalid Code",
+    "errorCode": "OTP-0001"
+  },
+  "OTP_EXPIRED": {
+    "message": "Code already expired",
+    "errorCode": "OTP-0002"
+  }
+}

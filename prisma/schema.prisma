@@ -1,0 +1,174 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id              String             @id @default(cuid())
+  email           String?            @unique
+  username        String?            @unique
+  password        String?
+  isGuest         Boolean            @default(false) @map("is_guest")
+  createdAt       DateTime?          @default(now()) @map("created_at")
+  updatedAt       DateTime?          @updatedAt @map("updated_at")
+  guestToken      String?            @map("guest_token")
+  verified        Boolean            @default(false)
+  RPMModels       RPMModels[]
+  RoomMembers     RoomMembers[]
+  otp             Otp[]
+  AgoraChatUserID AgoraChatUserID[]
+  appointments    UserAppointments[]
+  role            String?            @default("user")
+
+  @@map("users")
+}
+
+model BlacklistedToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  createdAt DateTime @default(now())
+
+  @@map("black_listed_token")
+}
+
+model RPMModels {
+  id          String    @id @default(cuid())
+  name        String?
+  description String?
+  modelID     String
+  isDefault   Boolean   @default(false)
+  deleted     Boolean   @default(false)
+  deletedAt   DateTime? @map("deleted_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+  user        Users     @relation(fields: [userID], references: [id])
+  userID      String
+
+  @@map("rpm_models")
+}
+
+model Rooms {
+  id              String        @id @default(cuid())
+  roomName        String        @map("room_name")
+  roomDescription String?       @map("room_description")
+  isPublic        Boolean       @default(false) @map("is_public")
+  allowedUsers    String[]      @map("allowed_users")
+  deleted         Boolean       @default(false)
+  deletedAt       DateTime?     @map("deleted_at")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  RoomMembers     RoomMembers[]
+
+  @@map("rooms")
+}
+
+model RoomMembers {
+  id        String   @id @default(cuid())
+  Room      Rooms    @relation(fields: [roomID], references: [id])
+  roomID    String   @map("room_id")
+  User      Users    @relation(fields: [userID], references: [id])
+  userID    String   @map("user_id")
+  role      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("room_members")
+}
+
+model AgoraChatUserID {
+  id        String   @id @default(cuid())
+  User      Users    @relation(fields: [userID], references: [id])
+  userID    String   @map("user_id")
+  agoraID   String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("agora_chat_user_id")
+}
+
+model ServerAdminTokens {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("server_admin_tokens")
+}
+
+model AgoraVideoBlockIDs {
+  id        String   @id @default(cuid())
+  kickID    String   @unique @map("kick_id")
+  blockHash String   @unique @map("block_hash")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("agora_video_block_ids")
+}
+
+model AgoraChatRoomIDs {
+  id          String    @id @default(cuid())
+  roomID      String    @unique @map("room_id")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  lastCheckAt DateTime? @default(now()) @map("last_check_at")
+
+  @@map("agora_chat_room_ids")
+}
+
+model Otp {
+  id        String   @id @default(cuid())
+  code      Int
+  userID    String
+  token     String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user Users @relation(fields: [userID], references: [id])
+
+  @@map("otp")
+}
+
+model Appointments {
+  id              String             @id @default(cuid())
+  startTime       DateTime           @map("start_time")
+  endTime         DateTime           @map("end_time")
+  status          String
+  title           String
+  code            String             @unique
+  roomType        String?            @map("room_type")
+  roomEnvironment String?            @map("room_environment")
+  location        String?
+  description     String?
+  isEmailSent     Boolean            @default(false) @map("is_email_sent")
+  participants    UserAppointments[]
+  guestList       String[]           @map("guest_list")
+
+  deletedAt DateTime? @map("deleted_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@map("appointments")
+}
+
+model UserAppointments {
+  id            String @id @default(cuid())
+  userId        String @map("user_id")
+  appointmentId String @map("appoinment_id")
+
+  user        Users        @relation(fields: [userId], references: [id])
+  appointment Appointments @relation(fields: [appointmentId], references: [id])
+
+  @@map("user_appointments")
+}
+
+model ShortenedTokens {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  token     String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("shortened_tokens")
+}

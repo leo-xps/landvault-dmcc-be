@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <style>
+      /* Add any inline styling here */ html { font-family: sans-serif,
+      'Roboto'; font-size: 16px; } .border { border: 1px solid grey; } a {
+      text-decoration: none; }
+    </style>
+  </head>
+  <body
+    style="margin: 0; padding: 0; background-color: #192A56; padding-bottom:100px; font-family: 'Roboto', Arial, sans-serif; color: #fff; min-height:100vh;"
+  >
+
+    <table
+      role='presentation'
+      width='100%'
+      cellspacing='0'
+      cellpadding='0'
+      border='0'
+    >
+      <tr>
+        <td style='padding-top: 100px;' align='center' valign='center'>
+          <table
+            role='presentation'
+            cellspacing='0'
+            cellpadding='0'
+            border='0'
+            style='background-color: #273C68; border-radius: 8px; border: 1px solid #364D7E;'
+          >
+            <tr>
+              <td
+                width='600'
+                style='padding: 40px; '
+                colspan=''
+                align='top'
+                valign='top'
+              >
+                <div
+                  style='font-size: 32px; font-weight: bold; color: #A8C3E5;'
+                >Elevare AI Sales Representative</div>
+                <p style='color: #BBD4F2;'>If you're interested to book an
+                  appointment with our sales representative, you can do so here
+                  at
+                  <a
+                    style='color:skyblue; text-decoration: underline;'
+                    href='{{bookurl}}'
+                  >{{bookurl}}</a></p>
+                <br />
+
+                <div
+                  style='font-size: 18px; font-weight: bold; color: #A8C3E5;'
+                >Chat Log</div>
+                <p
+                  style='font-size: 14px; c4:00 pmolor: #BBD4F2; line-height:14px; color: #BBD4F2; font-weight:bold;'
+                >
+                  Chat History for Session
+                  {{id}}
+                  of
+                  {{date}}
+                </p>
+                <br />
+                <p>
+                  {{#each messages}}
+                    {{this}}<br /><br />
+                  {{/each}}
+                </p>
+              </td>
+
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+  </body>
+</html>

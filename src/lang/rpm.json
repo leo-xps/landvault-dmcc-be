@@ -1,0 +1,18 @@
+{
+  "RPM.INVALID_DELETE": {
+    "message": "Can't delete model as its the default or only model for the user!",
+    "errorCode": "RPM-001"
+  },
+  "RPM.INVALID_DEFAULT": {
+    "message": "Can't use provided model as default.",
+    "errorCode": "RPM-002"
+  },
+  "RPM.INVALID_INPUT": {
+    "message": "Invalid input provided.",
+    "errorCode": "RPM-003"
+  },
+  "RPM.NO_DEFAULT_MODEL": {
+    "message": "You haven't selected a default model yet.",
+    "errorCode": "RPM-003"
+  }
+}

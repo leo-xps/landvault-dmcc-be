@@ -1,0 +1,6 @@
+{
+  "RBAC.UNAUHTORIZED": {
+    "message": "Unauthorized to execute or access the resource",
+    "errorCode": "RBAC-001"
+  }
+}
