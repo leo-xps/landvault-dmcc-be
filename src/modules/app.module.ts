@@ -21,12 +21,13 @@ import { BrevoMailerModule } from './brevo-mailer/brevo-mailer.module';
 import { CsvGenModule } from './csv-gen/csv-gen.module';
 import { DbModule } from './db/db.module';
 import { DownloadModule } from './download/download.module';
+import { HealthModule } from './health/health.module';
 import { HubspotWebhookmeetingsModule } from './hubspot-webhookmeetings/hubspot-webhookmeetings.module';
+import { PriceTickerModule } from './price-ticker/price-ticker.module';
+import { PuppeteerModule } from './puppeteer/puppeteer.module';
 import { RpmModule } from './rpm/rpm.module';
 import { ServerTokensModule } from './server-tokens/server-tokens.module';
 import { UsersModule } from './users/users.module';
-import { HealthModule } from './health/health.module';
-import { CalendlyApiModule } from './calendly-api/calendly-api.module';
 
 @Module({
   imports: [
@@ -64,7 +65,8 @@ import { CalendlyApiModule } from './calendly-api/calendly-api.module';
     DownloadModule,
     CsvGenModule,
     HealthModule,
-    CalendlyApiModule,
+    PuppeteerModule,
+    PriceTickerModule,
   ],
   controllers: [],
   providers: [
