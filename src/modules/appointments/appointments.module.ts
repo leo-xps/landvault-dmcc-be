@@ -13,6 +13,7 @@ import { AppointmentsService } from './services/appointments.service';
         secret: JWT_SECRET,
         signOptions: {
           expiresIn: JWT_EXPIRATION,
+          algorithm: 'HS512',
         },
       }),
     }),

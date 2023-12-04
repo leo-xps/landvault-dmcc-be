@@ -168,6 +168,7 @@ export class DbUsersService {
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload: PayloadInterface = {
+        uid: user.id,
         id: user.id,
         email: user.email,
       };
@@ -200,6 +201,7 @@ export class DbUsersService {
     });
 
     const payload: PayloadInterface = {
+      uid: newGuest.id,
       id: newGuest.id,
       email: undefined,
     };
@@ -500,6 +502,7 @@ export class DbUsersService {
       }
 
       const payload: PayloadInterface = {
+        uid: user.id,
         id: user.id,
         email: user.email,
       };

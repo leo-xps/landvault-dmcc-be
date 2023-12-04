@@ -17,6 +17,7 @@ import { DbVerificationService } from './services/verification.service';
         secret: JWT_SECRET,
         signOptions: {
           expiresIn: JWT_EXPIRATION,
+          algorithm: 'HS512',
         },
       }),
     }),
