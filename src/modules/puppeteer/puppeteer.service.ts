@@ -3,6 +3,13 @@ import * as fs from 'fs';
 import * as path from 'path';
 import puppeteer from 'puppeteer';
 
+function conLog(...args) {
+  if (process.env.NODE_ENV === 'production') {
+    return;
+  }
+  console.log(...args);
+}
+
 @Injectable()
 export class PuppeteerService {
   async getBrowser() {
@@ -19,21 +26,21 @@ export class PuppeteerService {
     const browser = await this.getBrowser();
     const page = await browser.newPage(); // open new tab
 
-    console.log('Opening new tab');
+    conLog('Opening new tab');
 
     await page.goto(url); // go to site
 
-    console.log('Going to site: ', url);
+    conLog('Going to site: ', url);
 
     // To reflect CSS used for screens instead of print
     await page.emulateMediaType('screen');
 
     const pageRaw = await page.content();
-    console.log('Page: ', pageRaw);
+    conLog('Page: ', pageRaw);
 
     await page.waitForSelector(componentId); // wait for the selector to load
 
-    console.log('Waiting for selector: ', componentId);
+    conLog('Waiting for selector: ', componentId);
 
     const element = await page.$(componentId); // declare a variable with an ElementHandle
 
@@ -44,7 +51,7 @@ export class PuppeteerService {
       // omitBackground: true,
     });
 
-    console.log('Screenshot taken');
+    conLog('Screenshot taken');
 
     await browser.close(); // close browser
 
@@ -60,7 +67,7 @@ export class PuppeteerService {
     const browser = await this.getBrowser();
     const page = await browser.newPage(); // open new tab
 
-    console.log('Opening new tab');
+    conLog('Opening new tab');
 
     const finalHtml = await this.getHTMLFileFromTemplates(url);
 
@@ -70,11 +77,11 @@ export class PuppeteerService {
     await page.emulateMediaType('screen');
 
     const pageRaw = await page.content();
-    console.log('Page: ', pageRaw);
+    conLog('Page: ', pageRaw);
 
     await page.waitForSelector(componentId); // wait for the selector to load
 
-    console.log('Waiting for selector: ', componentId);
+    conLog('Waiting for selector: ', componentId);
 
     // wait for 5 seconds
     await page.waitForTimeout(5000);
@@ -88,7 +95,7 @@ export class PuppeteerService {
       // omitBackground: true,
     });
 
-    console.log('Screenshot taken');
+    conLog('Screenshot taken');
 
     await browser.close(); // close browser
 

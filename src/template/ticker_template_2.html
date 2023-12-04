@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .style {
+        width: 600px;
+        height: 500px;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="style">
+      <!-- TradingView Widget BEGIN -->
+      <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <div class="tradingview-widget-copyright">
+          <a
+            href="https://www.tradingview.com/"
+            rel="noopener nofollow"
+            target="_blank"
+            ><span class="blue-text">Track all markets on TradingView</span></a
+          >
+        </div>
+        <script
+          type="text/javascript"
+          src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js"
+          async
+        >
+            {
+            "colorTheme": "light",
+            "dateRange": "1D",
+            "showChart": false,
+            "locale": "en",
+            "width": "100%",
+            "height": "100%",
+            "largeChartUrl": "",
+            "isTransparent": false,
+            "showSymbolLogo": true,
+            "showFloatingTooltip": false,
+            "tabs": [
+              {
+                "title": "Indices",
+                "symbols": [
+                  {
+                    "s": "MEXC:HAIUSDT",
+                    "d": "Hacken Token"
+                  },
+                  {
+                    "s": "BINANCE:MATICUSD",
+                    "d": "Polygon Matic"
+                  },
+                  {
+                    "s": "COINBASE:BICOUSDT",
+                    "d": "Biconomy"
+                  },
+                  {
+                    "s": "BINANCE:SUIUSDT",
+                    "d": "Sui"
+                  },
+                  {
+                    "s": "GEMINI:ANKRUSD",
+                    "d": "Ankr"
+                  },
+                  {
+                    "s": "BITFINEX:BOBAUSD",
+                    "d": "Bitfinex Boba"
+                  },
+                  {
+                    "s": "OKX:BLOKUSDT",
+                    "d": "Blok"
+                  }
+                ],
+                "originalTitle": "Indices"
+              }
+            ]
+          }
+        </script>
+      </div>
+      <!-- TradingView Widget END -->
+    </div>
+  </body>
+</html>
