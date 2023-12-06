@@ -11,6 +11,8 @@ export class UsersMapper {
       email: user.email,
       username: user.username ?? user.email.split('@')[0],
       role: user.role ?? 'user',
+      iat: user.iat,
+      exp: user.exp,
     };
   }
   static displayAll(users: any[]): UserOutput[] {

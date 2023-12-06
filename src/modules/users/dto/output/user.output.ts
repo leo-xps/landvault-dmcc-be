@@ -4,4 +4,6 @@ export class UserOutput {
   email: string;
   username: string;
   role: string;
+  iat: number;
+  exp: number;
 }
