@@ -1,6 +1,7 @@
 import { RestAuthGuard } from '@common/auth/guards/rest-auth.guard';
 import { CurrentUser } from '@common/decorators/current-user.decorator';
 import { ResponseDto } from '@common/dto/response.dto';
+import { BlacklistedService } from '@modules/blacklisted/services/blacklisted.service';
 import { ServerTokensService } from '@modules/server-tokens/services/server-tokens.service';
 import {
   Body,
@@ -10,8 +11,11 @@ import {
   Post,
   Query,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { I18nService } from 'nestjs-i18n';
 import { RegisterUserInput } from '../dto/input/register-user.input';
 import { UpdateUserInput } from '../dto/input/update-user.input';
 import { UsersMapper } from '../dto/mapper/users.mapper';
@@ -25,6 +29,9 @@ export class UsersController {
     private readonly dbUsersService: DbUsersService,
     private readonly dbVerificationService: DbVerificationService,
     private readonly serverAdminToken: ServerTokensService,
+    private readonly jwtService: JwtService,
+    private readonly i18n: I18nService,
+    private readonly blacklistedService: BlacklistedService,
   ) {}
 
   async checkAdminTokenValidity(token: string) {
@@ -53,6 +60,53 @@ export class UsersController {
   async getUserInfo(@CurrentUser() user: any) {
     const response = await this.dbUsersService.getUserInfoById(user.id);
     return { data: UsersMapper.displayOne(response) };
+  }
+
+  @Post('/verify')
+  async verifyToken(@Body('uid') uid, @Body('tok') tok) {
+    let data: any;
+    try {
+      // verify jwt token
+      data = this.jwtService.verify(tok);
+
+      if (!data) {
+        throw new UnauthorizedException(
+          this.i18n.translate(`user.INVALID_TOKEN`),
+        );
+      }
+
+      if (data.id !== uid) {
+        throw new UnauthorizedException(
+          this.i18n.translate(`user.INVALID_TOKEN`),
+        );
+      }
+
+      // check if token is blacklisted
+      const isBlacklisted = await this.blacklistedService.isTokenBlacklisted(
+        tok,
+      );
+
+      if (isBlacklisted) {
+        throw new UnauthorizedException(
+          this.i18n.translate(`user.INVALID_TOKEN`),
+        );
+      }
+    } catch (error) {
+      throw new UnauthorizedException(
+        this.i18n.translate(`user.INVALID_TOKEN`),
+      );
+    }
+    return UsersMapper.displayOne(data);
+  }
+
+  @Post('logout')
+  @UseGuards(RestAuthGuard)
+  async logout(@CurrentUser() user: any, @Headers('Authorization') token) {
+    const tok = token.split(' ')[1];
+    //revoke token
+    await this.blacklistedService.addTokenToBlacklist(tok);
+
+    return { message: 'success', id: user.id };
   }
 
   @Post('guest')

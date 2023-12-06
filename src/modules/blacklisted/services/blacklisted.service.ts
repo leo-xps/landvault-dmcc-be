@@ -16,4 +16,16 @@ export class BlacklistedService {
       });
     }
   }
+
+  async isTokenBlacklisted(token: string): Promise<boolean> {
+    const exist = await this.db.blacklistedToken.findUnique({
+      where: { token },
+    });
+
+    if (exist) {
+      return true;
+    }
+
+    return false;
+  }
 }
