@@ -96,7 +96,7 @@ export class UsersController {
         this.i18n.translate(`user.INVALID_TOKEN`),
       );
     }
-    return data;
+    return UsersMapper.displayOne(data);
   }
 
   @Post('logout')
