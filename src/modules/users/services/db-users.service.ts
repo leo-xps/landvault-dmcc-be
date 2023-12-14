@@ -208,7 +208,7 @@ export class DbUsersService {
     const payload: PayloadInterface = {
       uid: newGuest.id,
       id: newGuest.id,
-      email: undefined,
+      email: newGuest.email,
     };
 
     const accessToken: string = this.jwtService.sign(payload, {
