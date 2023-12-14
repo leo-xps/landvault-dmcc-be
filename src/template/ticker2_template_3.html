@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .style {
+        width: 2000px;
+        height: 72px;
+        max-height: 72px;
+        overflow-y: hidden;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="style">
+      <!-- TradingView Widget BEGIN -->
+      <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <div class="tradingview-widget-copyright">
+          <a
+            href="https://www.tradingview.com/"
+            rel="noopener nofollow"
+            target="_blank"
+            ><span class="blue-text">Track all markets on TradingView</span></a
+          >
+        </div>
+        <script
+          type="text/javascript"
+          src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js"
+          async
+        >
+            {
+            "symbols": [
+              {
+                "proName": "BINANCE:ADAUSD",
+                "title": "Cardano"
+              },
+              {
+                "proName": "OKX:TONUSDT",
+                "title": "TON Coin"
+              },
+              {
+                "proName": "BINANCE:AVAXUSD",
+                "title": "Avalanche"
+              },
+              {
+                "proName": "COINBASE:UNIUSD",
+                "title": "Uniswap Coin"
+              },
+              {
+                "proName": "BITSTAMP:1INCHUSD",
+                "title": "1Inch"
+              },
+              {
+                "proName": "BINANCE:AGIXUSD",
+                "title": "Agix"
+              }
+            ],
+            "colorTheme": "dark",
+            "isTransparent": false,
+            "showSymbolLogo": true,
+            "locale": "en"
+          }
+        </script>
+      </div>
+      <!-- TradingView Widget END -->
+    </div>
+  </body>
+</html>

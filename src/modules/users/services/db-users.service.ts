@@ -196,8 +196,13 @@ export class DbUsersService {
 
   async generateGuestToken() {
     const generateGuestUsername = await this.generateGuestUsername();
+    const guestEmail = generateGuestUsername + '@guest.io';
     const newGuest = await this.db.users.create({
-      data: { isGuest: true, username: generateGuestUsername },
+      data: {
+        isGuest: true,
+        username: generateGuestUsername,
+        email: guestEmail,
+      },
     });
 
     const payload: PayloadInterface = {
