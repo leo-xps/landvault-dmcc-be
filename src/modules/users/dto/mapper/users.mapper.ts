@@ -11,6 +11,7 @@ export class UsersMapper {
       email: user.email,
       username: user.username ?? user.email.split('@')[0],
       role: user.role ?? 'user',
+      isGuest: user.isGuest ?? false,
       iat: user.iat,
       exp: user.exp,
     };
