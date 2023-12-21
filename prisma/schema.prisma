@@ -26,6 +26,7 @@ model Users {
   AgoraChatUserID AgoraChatUserID[]
   appointments    UserAppointments[]
   role            String?            @default("user")
+  AvaturnModels   AvaturnModels[]
 
   @@map("users")
 }
@@ -52,6 +53,22 @@ model RPMModels {
   userID      String
 
   @@map("rpm_models")
+}
+
+model AvaturnModels {
+  id          String    @id @default(cuid())
+  name        String?
+  description String?
+  modelID     String
+  isDefault   Boolean   @default(false)
+  deleted     Boolean   @default(false)
+  deletedAt   DateTime? @map("deleted_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+  user        Users     @relation(fields: [userID], references: [id])
+  userID      String
+
+  @@map("avaturn_models")
 }
 
 model Rooms {

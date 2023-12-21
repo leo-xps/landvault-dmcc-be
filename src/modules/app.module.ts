@@ -28,6 +28,7 @@ import { PuppeteerModule } from './puppeteer/puppeteer.module';
 import { RpmModule } from './rpm/rpm.module';
 import { ServerTokensModule } from './server-tokens/server-tokens.module';
 import { UsersModule } from './users/users.module';
+import { AvaturnModule } from './avaturn/avaturn.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { UsersModule } from './users/users.module';
     HealthModule,
     PuppeteerModule,
     PriceTickerModule,
+    AvaturnModule,
   ],
   controllers: [],
   providers: [
