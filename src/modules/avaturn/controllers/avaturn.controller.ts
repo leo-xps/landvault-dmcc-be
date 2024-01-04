@@ -14,20 +14,20 @@ import { IAvaturnModelCreateInput } from '../types/AvaturnModel.types';
 
 @Controller('avaturn')
 export class AvaturnController {
-  constructor(private readonly rpmService: AvaturnService) {}
+  constructor(private readonly avaturnService: AvaturnService) {}
 
   // get default
   @Get()
   @UseGuards(RestAuthGuard)
   async getDefault(@CurrentUser('id') userId: string) {
-    return this.rpmService.getDefaultModel(userId);
+    return this.avaturnService.getDefaultModel(userId);
   }
 
   // get list
   @Get('list')
   @UseGuards(RestAuthGuard)
   async getList(@CurrentUser('id') userId: string) {
-    return this.rpmService.getAllModels(userId);
+    return this.avaturnService.getAllModels(userId);
   }
 
   // create new
@@ -37,7 +37,7 @@ export class AvaturnController {
     @CurrentUser('id') userId: string,
     @Body() body: IAvaturnModelCreateInput,
   ) {
-    return this.rpmService.createModel(userId, body);
+    return this.avaturnService.createModel(userId, body);
   }
 
   // update
@@ -48,20 +48,20 @@ export class AvaturnController {
     @Param('id') id: string,
     @Body() body: IAvaturnModelCreateInput,
   ) {
-    return this.rpmService.updateModel(userId, id, body);
+    return this.avaturnService.updateModel(userId, id, body);
   }
 
   // delete
   @Put(':id/delete')
   @UseGuards(RestAuthGuard)
   async delete(@CurrentUser('id') userId: string, @Param('id') id: string) {
-    return this.rpmService.deleteModel(userId, id);
+    return this.avaturnService.deleteModel(userId, id);
   }
 
   // set default
   @Put(':id/set-default')
   @UseGuards(RestAuthGuard)
   async setDefault(@CurrentUser('id') userId: string, @Param('id') id: string) {
-    return this.rpmService.setModelAsDefault(userId, id);
+    return this.avaturnService.setModelAsDefault(userId, id);
   }
 }
