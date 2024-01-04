@@ -14,7 +14,14 @@ import * as bcrypt from 'bcrypt';
 import * as moment from 'moment';
 import { I18nService } from 'nestjs-i18n';
 import { RegisterUserInput } from '../dto/input/register-user.input';
-import { UpdateUserInput } from '../dto/input/update-user.input';
+import {
+  UpdateUserInfo,
+  UpdateUserInput,
+} from '../dto/input/update-user.input';
+import {
+  GetUserRequest,
+  GetUserResponse,
+} from '../dto/interfaces/getuser.interface';
 import { PayloadInterface } from '../dto/interfaces/payload.interface';
 import { DbVerificationService } from './verification.service';
 
@@ -371,6 +378,22 @@ export class DbUsersService {
     return { data: 'User updated successfully' };
   }
 
+  async updateUserInfo(userID: string, updateUserInput: UpdateUserInfo) {
+    await this.db.users.update({
+      where: {
+        id: userID,
+      },
+      data: {
+        firstName: updateUserInput?.firstName,
+        lastName: updateUserInput?.lastName,
+        countryCode: updateUserInput?.countryCode,
+        phoneNumber: updateUserInput?.phoneNumber,
+      },
+    });
+
+    return { data: 'User updated successfully' };
+  }
+
   async updateUserRole(userID: string, role: string) {
     const user = await this.db.users.findUnique({
       where: { id: userID },
@@ -635,5 +658,51 @@ export class DbUsersService {
 
     const randomNumbers = randomDigits(7);
     return `GUEST${randomNumbers}`;
+  }
+
+  // trading game
+
+  async getUserTradingGame(data: GetUserRequest): Promise<GetUserResponse> {
+    const response: GetUserResponse = {
+      msg: {
+        wsi: '',
+        uid: '',
+        mcd: 0,
+        tim: 0,
+        erc: 0,
+        ers: '',
+        cmd: 0,
+      },
+      dtl: [],
+    };
+    let dbData;
+
+    try {
+      dbData = await this.db.users.findFirst({
+        where: {
+          id: data.ecs,
+        },
+      });
+
+      response.dtl.push({
+        lid: dbData.id,
+        eid: dbData.email,
+        fnm: `${dbData.firstName ?? ''}${
+          dbData.lastName ? ` ${dbData.lastName}` : ''
+        }`,
+        mob: dbData.phoneNumber ?? '',
+        rid: Number(dbData.countryCode ?? 0),
+      });
+    } catch (err) {
+      response.msg.erc = 404;
+      response.msg.ers = err.message;
+    }
+
+    if (!dbData) {
+      response.msg.erc = 404;
+      response.msg.ers = 'User not found.';
+    }
+
+    return response;
   }
 }

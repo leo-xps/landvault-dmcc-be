@@ -27,6 +27,10 @@ model Users {
   appointments    UserAppointments[]
   role            String?            @default("user")
   AvaturnModels   AvaturnModels[]
+  firstName       String?            @map("first_name")
+  lastName        String?            @map("last_name")
+  countryCode     String?            @map("country_code")
+  phoneNumber     String?            @map("phone_number")
 
   @@map("users")
 }

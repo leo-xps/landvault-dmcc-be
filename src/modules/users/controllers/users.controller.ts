@@ -17,7 +17,11 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { I18nService } from 'nestjs-i18n';
 import { RegisterUserInput } from '../dto/input/register-user.input';
-import { UpdateUserInput } from '../dto/input/update-user.input';
+import {
+  UpdateUserInfo,
+  UpdateUserInput,
+} from '../dto/input/update-user.input';
+import { GetUserRequest } from '../dto/interfaces/getuser.interface';
 import { UsersMapper } from '../dto/mapper/users.mapper';
 import { UserOutput } from '../dto/output/user.output';
 import { DbUsersService } from '../services/db-users.service';
@@ -254,5 +258,16 @@ export class UsersController {
     );
 
     return { url };
+  }
+
+  @Post('get-user-info')
+  async getUsersInfo(@Body() data: GetUserRequest) {
+    return this.dbUsersService.getUserTradingGame(data);
+  }
+
+  @Post('update-info')
+  @UseGuards(RestAuthGuard)
+  async updateUserInfo(@CurrentUser() user: any, @Body() data: UpdateUserInfo) {
+    return this.dbUsersService.updateUserInfo(user.id, data);
   }
 }
