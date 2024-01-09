@@ -4,6 +4,7 @@ import {
   MAILER_NAME,
 } from '@common/environment';
 import { getHTMLFileFromTemplates } from '@common/utils/readFiles';
+import { ISendMailOptions } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import handlebars from 'handlebars';
 import * as SibApiV3Sdk from 'sib-api-v3-sdk';
@@ -19,7 +20,12 @@ export class BrevoMailerService {
     this.apiInstance = new TransactionalEmailsApi();
   }
 
-  async executeSendEmail(options: any) {
+  async executeSendEmail(
+    options: ISendMailOptions,
+    extra?: {
+      templateParams?: SibApiV3Sdk.SendSmtpEmail['params'];
+    },
+  ) {
     const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
     sendSmtpEmail.subject = options.subject;
@@ -35,6 +41,15 @@ export class BrevoMailerService {
     ];
 
     if (options.cc) sendSmtpEmail.cc = [{ email: options.cc as string }];
+
+    if (options.template) {
+      sendSmtpEmail.templateId = Number(options.template);
+    } else if (options.html) {
+      sendSmtpEmail.htmlContent = options.html as string;
+    }
+    if (extra?.templateParams) {
+      sendSmtpEmail.params = extra?.templateParams;
+    }
 
     return await this.apiInstance.sendTransacEmail(sendSmtpEmail);
   }
@@ -141,6 +156,27 @@ export class BrevoMailerService {
       messageVersions,
       subject,
       htmlText,
+    );
+
+    return messageId;
+  }
+
+  async sendEmailByBrevoTemplate(
+    to: string,
+    subject: string,
+    templateId: string,
+    params: SibApiV3Sdk.SendSmtpEmail['params'],
+  ) {
+    const messageId = await this.executeSendEmail(
+      {
+        to: to,
+        cc: '',
+        subject: subject,
+        template: templateId,
+      },
+      {
+        templateParams: params,
+      },
     );
 
     return messageId;

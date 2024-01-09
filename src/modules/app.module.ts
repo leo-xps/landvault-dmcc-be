@@ -29,6 +29,7 @@ import { RpmModule } from './rpm/rpm.module';
 import { ServerTokensModule } from './server-tokens/server-tokens.module';
 import { UsersModule } from './users/users.module';
 import { AvaturnModule } from './avaturn/avaturn.module';
+import { CalendlyModule } from './calendly/calendly.module';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { AvaturnModule } from './avaturn/avaturn.module';
     PuppeteerModule,
     PriceTickerModule,
     AvaturnModule,
+    CalendlyModule,
   ],
   controllers: [],
   providers: [

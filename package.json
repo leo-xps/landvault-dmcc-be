@@ -30,6 +30,7 @@
   "dependencies": {
     "@getbrevo/brevo": "^1.0.1",
     "@hubspot/api-client": "^10.0.0",
+    "@nestjs-modules/mailer": "^1.10.3",
     "@nestjs/axios": "^3.0.0",
     "@nestjs/cache-manager": "^2.1.0",
     "@nestjs/common": "^9.0.0",
