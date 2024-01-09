@@ -54,7 +54,7 @@ export class CalendlyService {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'X-TOKEN': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       },
       (error) => {
@@ -67,7 +67,7 @@ export class CalendlyService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-TOKEN': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       data: {
         url: `${process.env.SERVER_URL}/api/calendly/listener`,
