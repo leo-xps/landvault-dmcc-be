@@ -107,6 +107,19 @@ export class CalendlyService {
       sha256HashString(email + createdAt).substring(0, 7),
     );
 
+    const location = eventData.payload.questions_and_answers.find(
+      (e) => e.question === 'On what room would you like us to meet?',
+    ) ?? { answer: 'Meeting Room' };
+    const roomDecode = {
+      'Meeting Room': 'meeting',
+      'Co-Working Space': 'coworking',
+      Auditorium: 'auditorium',
+    };
+    const findOrDefault = (key: string) => {
+      return roomDecode[key] ?? 'meeting';
+    };
+    joinURL.searchParams.append('room', findOrDefault(location.answer));
+
     const joinLink = joinURL.toString();
     const joinID = sha256HashString(joinLink).toUpperCase();
 
