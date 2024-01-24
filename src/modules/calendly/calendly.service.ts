@@ -87,7 +87,10 @@ export class CalendlyService {
     }
 
     // check if event is our event
-    if (eventData.payload.name !== process.env.CALENDLY_EVENT_TITLE) {
+    if (
+      eventData.payload.scheduled_event.name !==
+      process.env.CALENDLY_EVENT_TITLE
+    ) {
       return;
     }
 
