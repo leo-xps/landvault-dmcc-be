@@ -86,6 +86,11 @@ export class CalendlyService {
       return;
     }
 
+    // check if event is our event
+    if (eventData.payload.name !== process.env.CALENDLY_EVENT_TITLE) {
+      return;
+    }
+
     // get members of meeting
     const email = eventData.payload.email;
     const guests =
