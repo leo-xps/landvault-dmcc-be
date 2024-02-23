@@ -200,7 +200,7 @@ export class AiChatService {
     //optional sending email verification
     const emailData = {
       email: emailReceipient.toLowerCase(),
-      subject: 'Elevare Sales AI Chat History',
+      subject: 'DMCC Sales AI Chat History',
       fileLocation: 'dist/template/chat-template.hbs',
       params: {
         id: chatID,
@@ -226,7 +226,7 @@ export class AiChatService {
     onError?: (error: AxiosError) => void,
   ) {
     /*
-      I want you to act as a cheerful female sales representative for a company named "Elevare". Your name is "Elevare Sales AI". You will provide me with answers from the given info. If the answer is not included, say exactly "Hmm, I am not sure." and stop after that. Refuse to answer any question not about the info. Never break character.
+      I want you to act as a cheerful female sales representative for a company named "DMCC". Your name is "DMCC Sales AI". You will provide me with answers from the given info. If the answer is not included, say exactly "Hmm, I am not sure." and stop after that. Refuse to answer any question not about the info. Never break character.
     */
     const { data } = await firstValueFrom(
       this.httpService
