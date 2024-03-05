@@ -11,6 +11,13 @@ export class UpdateUserInput {
   username?: string;
 }
 
+export class SearchByTags {
+  @IsString({
+    each: true,
+  })
+  tags: string[];
+}
+
 export class UpdateUserInfo {
   @IsOptional()
   @IsString()
@@ -29,4 +36,18 @@ export class UpdateUserInfo {
   @IsNumberString()
   @IsString()
   phoneNumber?: string;
+
+  @IsOptional()
+  @IsString()
+  position?: string;
+
+  @IsOptional()
+  @IsString()
+  company?: string;
+
+  @IsOptional()
+  @IsString({
+    each: true,
+  })
+  tags?: string[];
 }

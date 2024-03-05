@@ -7,4 +7,11 @@ export class UserOutput {
   role: string;
   iat: number;
   exp: number;
+  firstName: string;
+  lastName: string;
+  company: string;
+  position: string;
+  phone: string;
+  tags: string[];
+  canMatch: boolean;
 }

@@ -193,6 +193,13 @@ export class DbUsersService {
   async getUserInfoById(userId: string) {
     const user = await this.db.users.findUnique({
       where: { id: userId },
+      include: {
+        TagsInUser: {
+          include: {
+            tag: true,
+          },
+        },
+      },
     });
     if (!user) {
       throw new NotFoundException(this.i18n.translate('user.USER_NOT_FOUND'));
@@ -388,10 +395,139 @@ export class DbUsersService {
         lastName: updateUserInput?.lastName,
         countryCode: updateUserInput?.countryCode,
         phoneNumber: updateUserInput?.phoneNumber,
+        position: updateUserInput?.position,
+        company: updateUserInput?.company,
       },
     });
 
+    if (updateUserInput?.tags) {
+      // lowercase, remove duplicates, strip
+      updateUserInput.tags = updateUserInput.tags
+        .map((tag) => tag.toLowerCase().trim())
+        .filter((tag, index, self) => self.indexOf(tag) === index);
+
+      // create a record of <tag, tagID>
+      const tagList: Record<string, string> = {};
+
+      // get tag ID from the database
+      const tags = await this.db.userTags.findMany({
+        where: {
+          tag: {
+            in: updateUserInput.tags,
+          },
+        },
+      });
+      for (const tag of tags) {
+        tagList[tag.tag] = tag.id;
+      }
+
+      // create new tags if not found
+      for (const tag of updateUserInput.tags) {
+        if (!tagList[tag]) {
+          const newTag = await this.db.userTags.create({
+            data: {
+              tag,
+            },
+          });
+          tagList[tag] = newTag.id;
+        }
+      }
+
+      // get all user tags
+      const existingTagsInUser = await this.db.tagsInUser.findMany({
+        where: {
+          userID,
+        },
+        include: {
+          tag: true,
+        },
+      });
+
+      // if there's a tag in existing tags that is not in the new tags, delete it
+      for (const tag of existingTagsInUser) {
+        if (!tagList[tag.tag.tag]) {
+          await this.db.tagsInUser.delete({
+            where: {
+              id: tag.id,
+            },
+          });
+        }
+      }
+
+      // if there's a new tag not in the existing tags, add it
+      for (const tag of updateUserInput.tags) {
+        if (
+          !existingTagsInUser.find((existingTag) => existingTag.tag.tag === tag)
+        ) {
+          await this.db.tagsInUser.create({
+            data: {
+              tagID: tagList[tag],
+              userID,
+            },
+          });
+        }
+      }
+    }
+
     return { data: 'User updated successfully' };
+  }
+
+  async searchUserByTags(userID: string, tags: string[]) {
+    // lowercase, remove duplicates, strip
+    tags = tags
+      .map((tag) => tag.toLowerCase().trim())
+      .filter((tag, index, self) => self.indexOf(tag) === index);
+
+    const users = await this.db.users.findMany({
+      where: {
+        TagsInUser: {
+          some: {
+            tag: {
+              tag: {
+                in: tags,
+              },
+            },
+          },
+        },
+        NOT: {
+          id: userID,
+        },
+      },
+      include: {
+        TagsInUser: {
+          include: {
+            tag: true,
+          },
+        },
+        RPMModels: {
+          where: {
+            isDefault: true,
+          },
+        },
+      },
+    });
+
+    const userList = users.map((user) => {
+      const userTags = user.TagsInUser?.map((tag) => tag.tag.tag) ?? [];
+      const matchingTags = tags.filter((tag) => userTags.includes(tag));
+      return {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        model: user.RPMModels[0],
+        company: user.company,
+        position: user.position,
+        tags: userTags,
+        matchingTags,
+      };
+    });
+
+    // sort by matching tags
+    userList.sort((a, b) => b.matchingTags.length - a.matchingTags.length);
+
+    return userList;
   }
 
   async updateUserRole(userID: string, role: string) {
