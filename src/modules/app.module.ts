@@ -11,13 +11,17 @@ import {
   QueryResolver,
 } from 'nestjs-i18n';
 import { join } from 'path';
+import { AdsModule } from './ads/ads.module';
 import { AgoraChatModule } from './agora-chat/agora-chat.module';
 import { AgoraCoreModule } from './agora-core/agora-core.module';
 import { AgoraVideoModule } from './agora-video/agora-video.module';
 import { AiChatModule } from './ai-chat/ai-chat.module';
 import { AppointmentsModule } from './appointments/appointments.module';
+import { AvaturnModule } from './avaturn/avaturn.module';
 import { BlacklistedModule } from './blacklisted/blacklisted.module';
 import { BrevoMailerModule } from './brevo-mailer/brevo-mailer.module';
+import { CalendlyModule } from './calendly/calendly.module';
+import { ChatListModule } from './chat-list/chat-list.module';
 import { CsvGenModule } from './csv-gen/csv-gen.module';
 import { DbModule } from './db/db.module';
 import { DownloadModule } from './download/download.module';
@@ -28,8 +32,6 @@ import { PuppeteerModule } from './puppeteer/puppeteer.module';
 import { RpmModule } from './rpm/rpm.module';
 import { ServerTokensModule } from './server-tokens/server-tokens.module';
 import { UsersModule } from './users/users.module';
-import { AvaturnModule } from './avaturn/avaturn.module';
-import { CalendlyModule } from './calendly/calendly.module';
 
 @Module({
   imports: [
@@ -71,6 +73,8 @@ import { CalendlyModule } from './calendly/calendly.module';
     PriceTickerModule,
     AvaturnModule,
     CalendlyModule,
+    ChatListModule,
+    AdsModule,
   ],
   controllers: [],
   providers: [

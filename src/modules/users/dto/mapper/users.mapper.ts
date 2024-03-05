@@ -5,6 +5,16 @@ export class UsersMapper {
     if (!user) {
       return undefined;
     }
+    let canMatch = true;
+    if (
+      !user.position ||
+      !user.company ||
+      !user.TagsInUser ||
+      user.TagsInUser.length <= 0
+    ) {
+      canMatch = false;
+    }
+
     return {
       uid: user.id,
       id: user.id,
@@ -14,6 +24,13 @@ export class UsersMapper {
       isGuest: user.isGuest ?? false,
       iat: user.iat,
       exp: user.exp,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      company: user.company,
+      phone: user.phone,
+      position: user.position,
+      tags: user.TagsInUser?.map((tag) => tag.tag.tag) ?? [],
+      canMatch,
     };
   }
   static displayAll(users: any[]): UserOutput[] {

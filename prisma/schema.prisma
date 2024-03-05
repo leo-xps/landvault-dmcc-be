@@ -31,8 +31,31 @@ model Users {
   lastName        String?            @map("last_name")
   countryCode     String?            @map("country_code")
   phoneNumber     String?            @map("phone_number")
+  position        String?
+  company         String?
+  TagsInUser      TagsInUser[]
 
   @@map("users")
+}
+
+model TagsInUser {
+  id        String   @id @default(cuid())
+  user      Users    @relation(fields: [userID], references: [id])
+  userID    String   @map("user_id")
+  tag       UserTags @relation(fields: [tagID], references: [id])
+  tagID     String   @map("tag_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("tags_in_user")
+}
+
+model UserTags {
+  id         String       @id @default(cuid())
+  tag        String       @unique
+  createdAt  DateTime     @default(now()) @map("created_at")
+  TagsInUser TagsInUser[]
+
+  @@map("user_tags")
 }
 
 model BlacklistedToken {
@@ -192,4 +215,13 @@ model ShortenedTokens {
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("shortened_tokens")
+}
+
+model ChatHistory {
+  id        String   @id @default(cuid())
+  roomID    String   @map("room_id")
+  data      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("chat_history")
 }
