@@ -46,6 +46,6 @@ export class ChatListService {
       },
     });
 
-    return chatHistory?.data;
+    return chatHistory?.data ?? '';
   }
 }
