@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { AdsService } from '../services/ads.service';
 
 @Controller('ads')
@@ -7,7 +7,12 @@ export class AdsController {
 
   // get
   @Get()
-  async getChatListData() {
-    return { adUrl: await this.ads.getAds({}) };
+  async getChatListData(@Query('locationID') locationID: string) {
+    return {
+      adUrl: await this.ads.getAds({
+        locationID,
+      }),
+      locationID,
+    };
   }
 }
