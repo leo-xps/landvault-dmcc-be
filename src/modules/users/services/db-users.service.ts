@@ -499,7 +499,7 @@ export class DbUsersService {
             tag: true,
           },
         },
-        RPMModels: {
+        AvaturnModels: {
           where: {
             isDefault: true,
           },
@@ -516,7 +516,7 @@ export class DbUsersService {
         username: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
-        model: user.RPMModels[0],
+        model: user.AvaturnModels[0].modelID ?? '',
         company: user.company,
         position: user.position,
         tags: userTags,
