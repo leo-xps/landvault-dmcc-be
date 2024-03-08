@@ -516,7 +516,7 @@ export class DbUsersService {
         username: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
-        model: user.AvaturnModels[0].modelID ?? '',
+        model: user.AvaturnModels?.[0]?.modelID ?? '',
         company: user.company,
         position: user.position,
         tags: userTags,
