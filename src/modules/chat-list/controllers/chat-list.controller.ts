@@ -41,4 +41,15 @@ export class ChatListController {
     }
     return { id: chatID, data: await this.chat.getChatListData(chatID) };
   }
+
+  // get
+  @Get('')
+  async getChatList(@Headers('lv-srv-adm') srvToken: string) {
+    const valid = await this.checkAdminTokenValidity(srvToken);
+
+    if (!valid) {
+      return { error: 'Invalid server admin token' };
+    }
+    return { data: await this.chat.getChatListAll() };
+  }
 }

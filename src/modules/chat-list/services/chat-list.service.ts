@@ -48,4 +48,11 @@ export class ChatListService {
 
     return chatHistory?.data ?? '';
   }
+
+  // get
+  async getChatListAll() {
+    const chatHistory = await this.db.chatHistory.findMany({});
+
+    return chatHistory;
+  }
 }
