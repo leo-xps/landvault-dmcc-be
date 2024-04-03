@@ -225,3 +225,12 @@ model ChatHistory {
 
   @@map("chat_history")
 }
+
+model GameData {
+  id        String   @id @default(cuid())
+  sourceID  String   @map("source_id")
+  data      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("game_data")
+}
