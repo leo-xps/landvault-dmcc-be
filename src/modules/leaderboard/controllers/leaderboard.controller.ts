@@ -30,8 +30,10 @@ export class LeaderboardController {
     @CurrentUser('id') userId: string,
     @Body('score') score: number,
     @Body('gameID') gameID: string,
+    @Body('nickname') nickname: string,
+    @Body('email') email: string,
   ) {
-    return this.game.setUserScore(userId, score, gameID);
+    return this.game.setUserScore(userId, score, gameID, nickname, email);
   }
 
   // get

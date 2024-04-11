@@ -241,6 +241,8 @@ model Leaderboard {
   score     Int
   gameID    String   @map("game_id")
   userID    String   @map("user_id")
+  nickname  String?
+  email     String?
   User      Users    @relation(fields: [userID], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
 }

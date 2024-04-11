@@ -6,7 +6,13 @@ export class LeaderboardService {
   constructor(private readonly db: DbService) {}
 
   // set user score if it doesnt exist yet
-  async setUserScore(userID: string, score: number, gameID: string) {
+  async setUserScore(
+    userID: string,
+    score: number,
+    gameID: string,
+    username?: string,
+    email?: string,
+  ) {
     // if user score already exists, update, else create
     const userScore = await this.db.leaderboard.findFirst({
       where: {
@@ -22,6 +28,8 @@ export class LeaderboardService {
         },
         data: {
           score,
+          email,
+          nickname: username,
         },
       });
     } else {
@@ -30,6 +38,8 @@ export class LeaderboardService {
           userID,
           score,
           gameID,
+          email,
+          nickname: username,
         },
       });
     }
@@ -45,6 +55,8 @@ export class LeaderboardService {
       select: {
         score: true,
         createdAt: true,
+        nickname: true,
+        email: true,
         User: {
           select: {
             email: true,
@@ -56,7 +68,12 @@ export class LeaderboardService {
       },
     });
 
-    return userScore;
+    return {
+      score: userScore?.score || 0,
+      createdAt: userScore?.createdAt || new Date(),
+      nickname: userScore?.nickname ?? userScore?.User?.username ?? 'ANONYMOUS',
+      email: userScore?.email || userScore?.User?.email || 'ANONYMOUS',
+    };
   }
 
   // get listed scores
@@ -88,6 +105,8 @@ export class LeaderboardService {
       select: {
         score: true,
         createdAt: true,
+        nickname: true,
+        email: true,
         User: {
           select: {
             email: true,
@@ -99,7 +118,16 @@ export class LeaderboardService {
       },
     });
 
-    return leaderboard;
+    return leaderboard.map((user) => {
+      return {
+        score: user.score,
+        createdAt: user.createdAt,
+        // @ts-expect-error ts-migrate(7006) FIXME: Parameter 'user' implicitly has an 'any' type.
+        nickname: user.nickname || user.User?.username || 'ANONYMOUS',
+        // @ts-expect-error ts-migrate(7006) FIXME: Parameter 'user' implicitly has an 'any' type.
+        email: user.email || user.User?.email || 'ANONYMOUS',
+      };
+    });
   }
 
   async clearLeaderboard(gameID: string) {
