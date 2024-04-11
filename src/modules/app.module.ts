@@ -28,6 +28,7 @@ import { DownloadModule } from './download/download.module';
 import { GameDataModule } from './game-data/game-data.module';
 import { HealthModule } from './health/health.module';
 import { HubspotWebhookmeetingsModule } from './hubspot-webhookmeetings/hubspot-webhookmeetings.module';
+import { LeaderboardModule } from './leaderboard/leaderboard.module';
 import { PriceTickerModule } from './price-ticker/price-ticker.module';
 import { PuppeteerModule } from './puppeteer/puppeteer.module';
 import { RpmModule } from './rpm/rpm.module';
@@ -76,6 +77,7 @@ import { UsersModule } from './users/users.module';
     CalendlyModule,
     ChatListModule,
     GameDataModule,
+    LeaderboardModule,
     AdsModule,
   ],
   controllers: [],

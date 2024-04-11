@@ -34,6 +34,7 @@ model Users {
   position        String?
   company         String?
   TagsInUser      TagsInUser[]
+  Leaderboard     Leaderboard[]
 
   @@map("users")
 }
@@ -233,4 +234,13 @@ model GameData {
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("game_data")
+}
+
+model Leaderboard {
+  id        String   @id @default(cuid())
+  score     Int
+  gameID    String   @map("game_id")
+  userID    String   @map("user_id")
+  User      Users    @relation(fields: [userID], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
 }
