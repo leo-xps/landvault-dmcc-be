@@ -99,4 +99,12 @@ export class LeaderboardService {
 
     return leaderboard;
   }
+
+  async clearLeaderboard(gameID: string) {
+    return await this.db.leaderboard.deleteMany({
+      where: {
+        gameID,
+      },
+    });
+  }
 }

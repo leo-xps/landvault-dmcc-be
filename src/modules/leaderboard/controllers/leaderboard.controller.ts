@@ -1,11 +1,27 @@
 import { RestAuthGuard } from '@common/auth/guards/rest-auth.guard';
 import { CurrentUser } from '@common/decorators/current-user.decorator';
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { ServerTokensService } from '@modules/server-tokens/services/server-tokens.service';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { LeaderboardService } from '../services/leaderboard.service';
 
 @Controller('leaderboard')
 export class LeaderboardController {
-  constructor(private readonly game: LeaderboardService) {}
+  constructor(
+    private readonly game: LeaderboardService,
+    private readonly serverAdminToken: ServerTokensService,
+  ) {}
+
+  async checkAdminTokenValidity(token: string) {
+    return this.serverAdminToken.validateToken(token);
+  }
 
   // set
   @Post()
@@ -47,5 +63,20 @@ export class LeaderboardController {
         sort,
       ),
     };
+  }
+
+  // delete all
+  @Post('delete')
+  async deleteLeaderboard(
+    @Headers('lv-srv-adm') srvToken: string,
+    @Body('gameID') gameID: string,
+  ) {
+    const valid = await this.checkAdminTokenValidity(srvToken);
+
+    if (!valid) {
+      return { error: 'Invalid server admin token' };
+    }
+
+    return this.game.clearLeaderboard(gameID);
   }
 }
