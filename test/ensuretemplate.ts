@@ -23,6 +23,7 @@ const copy = (src: string, dist: string) => {
     const files = fs.readdirSync(src);
     files.forEach((file) => {
       copy(`${src}/${file}`, `${dist}/${file}`);
+      console.log(`Copied ${src}/${file} to ${dist}/${file}`);
     });
   } else {
     fs.copyFileSync(src, dist);
