@@ -25,6 +25,7 @@ import { ChatListModule } from './chat-list/chat-list.module';
 import { CsvGenModule } from './csv-gen/csv-gen.module';
 import { DbModule } from './db/db.module';
 import { DownloadModule } from './download/download.module';
+import { FileModule } from './file/file.module';
 import { GameDataModule } from './game-data/game-data.module';
 import { HealthModule } from './health/health.module';
 import { HubspotWebhookmeetingsModule } from './hubspot-webhookmeetings/hubspot-webhookmeetings.module';
@@ -79,6 +80,7 @@ import { UsersModule } from './users/users.module';
     GameDataModule,
     LeaderboardModule,
     AdsModule,
+    FileModule,
   ],
   controllers: [],
   providers: [

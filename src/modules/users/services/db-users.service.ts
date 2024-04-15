@@ -1,4 +1,4 @@
-import { AUTO_URL, BASE_URL } from '@common/environment';
+import { APP_URL, AUTO_URL, BASE_URL, ROOM_URL } from '@common/environment';
 import { sha256HashString } from '@common/utils/hash';
 import { BlacklistedService } from '@modules/blacklisted/services/blacklisted.service';
 import { BrevoMailerService } from '@modules/brevo-mailer/services/brevo-mailer.service';
@@ -727,9 +727,16 @@ export class DbUsersService {
       expiresIn: '30d',
     });
 
-    const bURL = auto ? AUTO_URL : BASE_URL;
+    const bURL = auto ? AUTO_URL : ROOM_URL;
 
-    const URL = `${bURL}?token=${token}`;
+    // const URL = `${bURL}?token=${token}`;
+
+    const urlObject = new URL(ROOM_URL);
+    urlObject.searchParams.append('token', token);
+    urlObject.searchParams.append('webUrl', BASE_URL);
+    urlObject.searchParams.append('appUrl', APP_URL);
+
+    const urlLink = urlObject.href;
 
     if (shorted) {
       const shortedID = this.generateRandomCode(token, 12);
@@ -744,7 +751,7 @@ export class DbUsersService {
       return `${bURL}?token=${this.shortedTokenPrefix}${shortedEntry.code}`;
     }
 
-    return URL;
+    return urlLink;
   }
 
   // used by hubspot joining

@@ -1,4 +1,4 @@
-import { BASE_URL } from '@common/environment';
+import { APP_URL, BASE_URL, ROOM_URL } from '@common/environment';
 import { BrevoMailerService } from '@modules/brevo-mailer/services/brevo-mailer.service';
 import { DbService } from '@modules/db/db.service';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
@@ -310,9 +310,14 @@ export class AppointmentsService {
       expiresIn: '30d',
     });
 
-    const URL = `${BASE_URL}?token=${token}`;
+    const urlObject = new URL(ROOM_URL);
+    urlObject.searchParams.append('token', token);
+    urlObject.searchParams.append('webUrl', BASE_URL);
+    urlObject.searchParams.append('appUrl', APP_URL);
 
-    return URL;
+    // const URL = `${ROOM_URL}?token=${token}&webUrl=${BASE_URL}&appUrl=${APP_URL}`;
+
+    return urlObject.href;
   }
 
   async appointmentEmails(emails: any[], appointmentId: string) {

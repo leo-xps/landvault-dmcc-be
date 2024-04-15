@@ -34,7 +34,9 @@ export const MAILER_EMAILADDRESS = process.env.MAILER_EMAILADDRESS ?? '';
 export const AGORA_CHAT_SECRET = process.env.AGORA_CHAT_SECRET ?? '';
 
 export const BASE_URL = process.env.BASE_URL ?? '';
+export const ROOM_URL = process.env.ROOM_URL ?? BASE_URL ?? '';
 export const AUTO_URL = process.env.AUTO_URL ?? '';
+export const APP_URL = process.env.APP_URL ?? BASE_URL ?? '';
 
 export const CHATBASE_APIKEY = process.env.CHATBASE_APIKEY ?? '';
 export const DEV_HUBSPOT_API_KEY = process.env.DEV_HUBSPOT_API_KEY ?? '';
