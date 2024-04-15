@@ -1,6 +1,6 @@
 // check if dist/teamplte/* exists and has files, if not, copy from src/template/*
 
-import fs from 'fs';
+import * as fs from 'fs';
 
 const src = 'src/client';
 
