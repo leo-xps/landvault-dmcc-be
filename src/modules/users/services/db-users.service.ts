@@ -729,15 +729,6 @@ export class DbUsersService {
 
     const bURL = auto ? AUTO_URL : ROOM_URL;
 
-    // const URL = `${bURL}?token=${token}`;
-
-    const urlObject = new URL(ROOM_URL);
-    urlObject.searchParams.append('token', token);
-    urlObject.searchParams.append('webUrl', BASE_URL);
-    urlObject.searchParams.append('appUrl', APP_URL);
-
-    const urlLink = urlObject.href;
-
     if (shorted) {
       const shortedID = this.generateRandomCode(token, 12);
       // save url to database
@@ -748,8 +739,23 @@ export class DbUsersService {
         },
       });
 
-      return `${bURL}?token=${this.shortedTokenPrefix}${shortedEntry.code}`;
+      const urlObject = new URL(ROOM_URL);
+      urlObject.searchParams.append(
+        'token',
+        `${this.shortedTokenPrefix}${shortedEntry.code}`,
+      );
+      urlObject.searchParams.append('webUrl', BASE_URL);
+      urlObject.searchParams.append('appUrl', APP_URL);
+
+      return urlObject;
     }
+
+    const urlObject = new URL(bURL);
+    urlObject.searchParams.append('token', token);
+    urlObject.searchParams.append('webUrl', BASE_URL);
+    urlObject.searchParams.append('appUrl', APP_URL);
+
+    const urlLink = urlObject.href;
 
     return urlLink;
   }
