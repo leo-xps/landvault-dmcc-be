@@ -41,6 +41,9 @@ RUN addgroup -S pptruser && adduser -S -g pptruser -G pptruser pptruser \
     && chown -R pptruser:pptruser /home/pptruser \
     && chown -R pptruser:pptruser /usr/src/app
 
+
+RUN yarn ts-node ./test/ensuretemplate.ts
+
 # Exports
 EXPOSE 3000
 
