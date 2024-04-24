@@ -854,4 +854,17 @@ export class DbUsersService {
 
     return response;
   }
+
+  // dmcc memebr
+
+  async setDMCCMember(userID: string, dmccMember: boolean) {
+    await this.db.users.update({
+      where: { id: userID },
+      data: {
+        dmccMember,
+      },
+    });
+
+    return { data: 'User updated successfully' };
+  }
 }

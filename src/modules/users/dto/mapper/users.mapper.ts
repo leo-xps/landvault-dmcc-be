@@ -30,6 +30,7 @@ export class UsersMapper {
       phone: user.phone,
       position: user.position,
       tags: user.TagsInUser?.map((tag) => tag.tag.tag) ?? [],
+      dmccMember: user.dmccMember,
       canMatch,
     };
   }

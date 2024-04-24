@@ -33,6 +33,7 @@ model Users {
   phoneNumber     String?            @map("phone_number")
   position        String?
   company         String?
+  dmccMember      Boolean            @default(false) @map("dmcc_member")
   TagsInUser      TagsInUser[]
   Leaderboard     Leaderboard[]
 

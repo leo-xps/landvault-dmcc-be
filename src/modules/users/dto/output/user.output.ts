@@ -14,4 +14,5 @@ export class UserOutput {
   phone: string;
   tags: string[];
   canMatch: boolean;
+  dmccMember: boolean;
 }

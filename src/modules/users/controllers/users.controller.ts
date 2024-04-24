@@ -2,6 +2,7 @@ import { RestAuthGuard } from '@common/auth/guards/rest-auth.guard';
 import { CurrentUser } from '@common/decorators/current-user.decorator';
 import { ResponseDto } from '@common/dto/response.dto';
 import { BlacklistedService } from '@modules/blacklisted/services/blacklisted.service';
+import { DbService } from '@modules/db/db.service';
 import { ServerTokensService } from '@modules/server-tokens/services/server-tokens.service';
 import {
   Body,
@@ -37,6 +38,7 @@ export class UsersController {
     private readonly jwtService: JwtService,
     private readonly i18n: I18nService,
     private readonly blacklistedService: BlacklistedService,
+    private readonly db: DbService,
   ) {}
 
   async checkAdminTokenValidity(token: string) {
@@ -276,5 +278,63 @@ export class UsersController {
   @UseGuards(RestAuthGuard)
   async searchByTags(@CurrentUser() user: any, @Body() data: SearchByTags) {
     return this.dbUsersService.searchUserByTags(user.id, data.tags);
+  }
+
+  @Post('set-dmcc-member')
+  async setDMCCMember(
+    @Headers('lv-srv-adm') srvToken: string,
+    @Body('data')
+    data: {
+      userID: string;
+      dmccMember: boolean;
+    }[],
+  ) {
+    const valid = await this.checkAdminTokenValidity(srvToken);
+
+    if (!valid) {
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    for (const item of data) {
+      await this.dbUsersService.setDMCCMember(item.userID, item.dmccMember);
+    }
+
+    return {
+      processed: data.length,
+    };
+  }
+
+  @Get('dmcc-member')
+  async getDMCCMemberList(
+    @Headers('lv-srv-adm') srvToken: string,
+    @Query('isMember') isMember: string,
+    @Query('page') page: string,
+    @Query('perPage') perPage: string,
+  ) {
+    const valid = await this.checkAdminTokenValidity(srvToken);
+
+    if (!valid) {
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    const _page = Number(page) || 1;
+    const _perPage = Number(perPage) || 10;
+
+    const data = await this.db.users.findMany({
+      where: {
+        dmccMember: isMember == 'true' ? true : false,
+      },
+      skip: (_page - 1) * _perPage,
+      take: _perPage,
+    });
+
+    return {
+      data: data.map((item) => ({
+        id: item.id,
+        email: item.email,
+        username: item.username,
+        dmccMember: item.dmccMember,
+      })),
+    };
   }
 }
