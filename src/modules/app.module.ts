@@ -42,6 +42,10 @@ import { UsersModule } from './users/users.module';
       rootPath: join(__dirname, '..', 'client'),
       serveRoot: '/page',
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client', '.well-known'),
+      serveRoot: '/.well-known',
+    }),
     ConfigModule.forRoot({ isGlobal: true }),
     I18nModule.forRoot({
       fallbackLanguage: 'en',
