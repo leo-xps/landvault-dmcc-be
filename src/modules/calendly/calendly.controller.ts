@@ -15,9 +15,15 @@ export class CalendlyController {
   async onWebhookEventReceive(@Body() body: OnEventCreated) {
     const data = await this.service.onWebhookEventReceive(body);
 
+    if (!data) {
+      return 'Ok';
+    }
+
     for (const invitee of data.recipients) {
       await this.service.sendEmailTemplate(invitee, data.conferenceUrl);
     }
+
+    console.log('Emails sent');
 
     return {
       status: 'ok',
