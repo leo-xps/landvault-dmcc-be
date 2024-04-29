@@ -112,6 +112,7 @@ export class DbUsersService {
         data: {
           email: registerUserInput.email.toLowerCase(),
           password: await this.hashPassword(registerUserInput.password),
+          phoneNumber: registerUserInput?.phoneNumber,
           isGuest: false,
           // guestToken: null,
         },
@@ -122,6 +123,7 @@ export class DbUsersService {
           email: registerUserInput.email.toLowerCase(),
           username: registerUserInput?.username,
           password: await this.hashPassword(registerUserInput.password),
+          phoneNumber: registerUserInput?.phoneNumber,
         },
       });
       //optional

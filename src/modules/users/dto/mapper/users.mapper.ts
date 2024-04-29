@@ -27,7 +27,7 @@ export class UsersMapper {
       firstName: user.firstName,
       lastName: user.lastName,
       company: user.company,
-      phone: user.phone,
+      phoneNumber: user.phoneNumber,
       position: user.position,
       tags: user.TagsInUser?.map((tag) => tag.tag.tag) ?? [],
       dmccMember: user.dmccMember,

@@ -11,7 +11,7 @@ export class UserOutput {
   lastName: string;
   company: string;
   position: string;
-  phone: string;
+  phoneNumber: string;
   tags: string[];
   canMatch: boolean;
   dmccMember: boolean;

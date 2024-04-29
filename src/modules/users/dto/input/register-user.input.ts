@@ -10,6 +10,10 @@ export class RegisterUserInput {
   @IsString()
   username?: string;
 
+  @IsOptional()
+  @IsString()
+  phoneNumber?: string;
+
   @IsNotEmpty()
   @IsString()
   password: string;
