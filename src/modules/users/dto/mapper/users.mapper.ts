@@ -31,6 +31,8 @@ export class UsersMapper {
       position: user.position,
       tags: user.TagsInUser?.map((tag) => tag.tag.tag) ?? [],
       dmccMember: user.dmccMember,
+      dmccID: user.dmccID,
+      dmccEmail: user.dmccEmail,
       canMatch,
     };
   }

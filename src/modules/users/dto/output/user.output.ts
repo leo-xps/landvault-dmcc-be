@@ -15,4 +15,6 @@ export class UserOutput {
   tags: string[];
   canMatch: boolean;
   dmccMember: boolean;
+  dmccID: string;
+  dmccEmail: string;
 }
