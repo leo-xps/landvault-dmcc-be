@@ -332,7 +332,7 @@ export class UsersController {
       skip: (_page - 1) * _perPage,
       take: _perPage,
       orderBy: {
-        createdAt: 'asc',
+        createdAt: 'desc',
       },
     });
 
