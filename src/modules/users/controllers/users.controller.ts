@@ -334,6 +334,9 @@ export class UsersController {
         email: item.email,
         username: item.username,
         dmccMember: item.dmccMember,
+        dmccEmail: item.dmccEmail,
+        dmccID: item.dmccID,
+        phoneNumber: item.phoneNumber,
       })),
     };
   }

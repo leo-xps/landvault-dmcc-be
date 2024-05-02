@@ -124,6 +124,8 @@ export class DbUsersService {
           username: registerUserInput?.username,
           password: await this.hashPassword(registerUserInput.password),
           phoneNumber: registerUserInput?.phoneNumber,
+          dmccID: registerUserInput?.dmccID,
+          dmccEmail: registerUserInput?.dmccEmail,
         },
       });
       //optional
@@ -399,6 +401,8 @@ export class DbUsersService {
         phoneNumber: updateUserInput?.phoneNumber,
         position: updateUserInput?.position,
         company: updateUserInput?.company,
+        dmccID: updateUserInput?.dmccID,
+        dmccEmail: updateUserInput?.dmccEmail,
       },
     });
 

@@ -39,6 +39,14 @@ export class UpdateUserInfo {
 
   @IsOptional()
   @IsString()
+  dmccEmail?: string;
+
+  @IsOptional()
+  @IsString()
+  dmccID?: string;
+
+  @IsOptional()
+  @IsString()
   position?: string;
 
   @IsOptional()

@@ -34,6 +34,8 @@ model Users {
   position        String?
   company         String?
   dmccMember      Boolean            @default(false) @map("dmcc_member")
+  dmccID          String?            @map("dmcc_id")
+  dmccEmail       String?            @map("dmcc_email")
   TagsInUser      TagsInUser[]
   Leaderboard     Leaderboard[]
 

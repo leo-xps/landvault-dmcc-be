@@ -14,6 +14,14 @@ export class RegisterUserInput {
   @IsString()
   phoneNumber?: string;
 
+  @IsOptional()
+  @IsString()
+  dmccID?: string;
+
+  @IsOptional()
+  @IsString()
+  dmccEmail?: string;
+
   @IsNotEmpty()
   @IsString()
   password: string;
