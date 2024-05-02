@@ -323,9 +323,17 @@ export class UsersController {
     const data = await this.db.users.findMany({
       where: {
         dmccMember: isMember == 'true' ? true : false,
+        email: {
+          not: {
+            contains: '@guest.io',
+          },
+        },
       },
       skip: (_page - 1) * _perPage,
       take: _perPage,
+      orderBy: {
+        createdAt: 'asc',
+      },
     });
 
     return {
