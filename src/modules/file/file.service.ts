@@ -7,7 +7,11 @@ const ClientOpts: ClientOptions = {
   accessKey: process.env.S3_ACCESS_KEY ?? '',
   secretKey: process.env.S3_SECRET_KEY ?? '',
   endPoint: process.env.S3_ENDPOINT ?? '',
+  region: process.env.S3_REGION ?? '',
 };
+
+const BUCKET_NAME = process.env.S3_BUCKET_NAME ?? '';
+const PREFIX = process.env.S3_PATH_PREFIX ?? '';
 
 @Injectable()
 export class FileService {
@@ -20,8 +24,8 @@ export class FileService {
 
   async getPresignedUrl(objectName: string, expiry: number = 24 * 60 * 60) {
     const url = await this.client.presignedPutObject(
-      'tests',
-      objectName,
+      BUCKET_NAME,
+      PREFIX + objectName,
       expiry,
     );
     return url;
