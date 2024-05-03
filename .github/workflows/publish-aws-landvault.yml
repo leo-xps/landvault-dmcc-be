@@ -9,10 +9,6 @@ env:
   AWS_REGION: us-east-1
   # set this to your Amazon ECR repository name
   ECR_REPOSITORY: ladnvault_general_databe
-  # set this to your Amazon ECS service name
-  ECS_SERVICE: dmcc-server
-  # set this to your Amazon ECS cluster name
-  ECS_CLUSTER: deploy-dmcc
 
 jobs:
   deploy:
@@ -46,7 +42,3 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_OUTPUT
-
-      - name: Force deployment
-        run: |
-          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --force-new-deployment
