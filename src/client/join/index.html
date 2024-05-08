@@ -56,8 +56,8 @@
       // get token from query string
       var urlParams = new URLSearchParams(window.location.search);
       var token = urlParams.get('token');
-      let webUrl = urlParams.get('webUrl');
-      let appUrl = urlParams.get('appUrl');
+      let webUrl = '/api/hubspot/web';
+      let appUrl = '/api/hubspot/app';
 
       if (isMobile) {
 

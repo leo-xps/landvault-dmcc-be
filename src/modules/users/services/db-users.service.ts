@@ -1,4 +1,4 @@
-import { APP_URL, AUTO_URL, BASE_URL, ROOM_URL } from '@common/environment';
+import { AUTO_URL, ROOM_URL } from '@common/environment';
 import { sha256HashString } from '@common/utils/hash';
 import { BlacklistedService } from '@modules/blacklisted/services/blacklisted.service';
 import { BrevoMailerService } from '@modules/brevo-mailer/services/brevo-mailer.service';
@@ -750,16 +750,12 @@ export class DbUsersService {
         'token',
         `${this.shortedTokenPrefix}${shortedEntry.code}`,
       );
-      urlObject.searchParams.append('webUrl', BASE_URL);
-      urlObject.searchParams.append('appUrl', APP_URL);
 
       return urlObject;
     }
 
     const urlObject = new URL(bURL);
     urlObject.searchParams.append('token', token);
-    urlObject.searchParams.append('webUrl', BASE_URL);
-    urlObject.searchParams.append('appUrl', APP_URL);
 
     const urlLink = urlObject.href;
 
