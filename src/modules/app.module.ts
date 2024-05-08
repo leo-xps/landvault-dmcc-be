@@ -35,6 +35,7 @@ import { PuppeteerModule } from './puppeteer/puppeteer.module';
 import { RpmModule } from './rpm/rpm.module';
 import { ServerTokensModule } from './server-tokens/server-tokens.module';
 import { UsersModule } from './users/users.module';
+import { PriceApiModule } from './price-api/price-api.module';
 
 @Module({
   imports: [
@@ -85,6 +86,7 @@ import { UsersModule } from './users/users.module';
     LeaderboardModule,
     AdsModule,
     FileModule,
+    PriceApiModule,
   ],
   controllers: [],
   providers: [
