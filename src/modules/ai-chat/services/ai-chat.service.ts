@@ -76,7 +76,7 @@ export class AiChatService {
               { content: 'How can I help you?', role: 'assistant' },
               { content: body.message, role: 'user' },
             ],
-            chatbotId: 'gsMDvLM9QJ0EgpZUZ25B0',
+            chatbotId: CHATBASE_MODELID,
             stream: true,
             conversationId: userId,
           },
