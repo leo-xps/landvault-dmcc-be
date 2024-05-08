@@ -36,10 +36,10 @@ RUN yarn prisma generate
 
 RUN yarn build
 
-RUN addgroup -S pptruser && adduser -S -g pptruser -G pptruser pptruser \
-    && mkdir -p /home/pptruser/Downloads \
-    && chown -R pptruser:pptruser /home/pptruser \
-    && chown -R pptruser:pptruser /usr/src/app
+# RUN addgroup -S pptruser && adduser -S -g pptruser -G pptruser pptruser \
+#     && mkdir -p /home/pptruser/Downloads \
+#     && chown -R pptruser:pptruser /home/pptruser \
+#     && chown -R pptruser:pptruser /usr/src/app
 
 
 RUN yarn ts-node ./test/ensuretemplate.ts
