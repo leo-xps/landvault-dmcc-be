@@ -171,7 +171,7 @@ export class BrevoMailerService {
       {
         to: to,
         cc: '',
-        subject: subject,
+        // subject: subject,
         template: templateId,
       },
       {
