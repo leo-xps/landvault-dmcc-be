@@ -39,10 +39,13 @@ export const AUTO_URL = process.env.AUTO_URL ?? '';
 export const APP_URL = process.env.APP_URL ?? BASE_URL ?? '';
 
 export const CHATBASE_APIKEY = process.env.CHATBASE_APIKEY ?? '';
+export const CHATBASE_MODELID = process.env.CHATBASE_MODELID ?? '';
 export const DEV_HUBSPOT_API_KEY = process.env.DEV_HUBSPOT_API_KEY ?? '';
 export const HUBSPOT_API_KEY = process.env.HUBSPOT_API_KEY ?? '';
 export const HUBSPOT_WEBHOOK_VIDEO_CONFERENCE_LINK =
   process.env.HUBSPOT_WEBHOOK_VIDEO_CONFERENCE_LINK ?? '';
+
+export const SERVER_URL = process.env.SERVER_URL ?? '';
 
 export const HUBSPOT_LANDVAULT_APP_ID =
   process.env.HUBSPOT_LANDVAULT_APP_ID ?? '';
