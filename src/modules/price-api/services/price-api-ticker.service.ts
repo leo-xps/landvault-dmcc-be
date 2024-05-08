@@ -55,7 +55,7 @@ export class PriceApiService {
           timestamp: item.timestamp,
         }));
       },
-      5 * _1_SECOND,
+      10 * _1_SECOND,
     );
   }
 }
