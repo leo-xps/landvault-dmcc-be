@@ -119,6 +119,7 @@ export class CalendlyService {
       (e) => e.question === 'On what room would you like us to meet?',
     ) ?? { answer: 'Meeting Room' };
     const roomDecode = {
+      'Private Room': 'private',
       'Meeting Room': 'meeting',
       'Co-Working Space': 'coworking',
       Auditorium: 'auditorium',
