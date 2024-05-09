@@ -38,8 +38,24 @@ model Users {
   dmccEmail       String?            @map("dmcc_email")
   TagsInUser      TagsInUser[]
   Leaderboard     Leaderboard[]
+  Notes           Notes[]
 
   @@map("users")
+}
+
+model Notes {
+  id        String    @id @default(cuid())
+  title     String?
+  data      String?
+  metadata  String?
+  deleted   Boolean   @default(false)
+  deletedAt DateTime? @map("deleted_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  user      Users     @relation(fields: [userID], references: [id])
+  userID    String
+
+  @@map("notes")
 }
 
 model TagsInUser {
