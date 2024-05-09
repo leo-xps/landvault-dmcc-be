@@ -29,14 +29,15 @@ import { FileModule } from './file/file.module';
 import { GameDataModule } from './game-data/game-data.module';
 import { HealthModule } from './health/health.module';
 import { HubspotWebhookmeetingsModule } from './hubspot-webhookmeetings/hubspot-webhookmeetings.module';
+import { LeaderboardCryptoModule } from './leaderboard-crypto/leaderboard-crypto.module';
 import { LeaderboardModule } from './leaderboard/leaderboard.module';
+import { NotesModule } from './notes/notes.module';
+import { PriceApiModule } from './price-api/price-api.module';
 import { PriceTickerModule } from './price-ticker/price-ticker.module';
 import { PuppeteerModule } from './puppeteer/puppeteer.module';
 import { RpmModule } from './rpm/rpm.module';
 import { ServerTokensModule } from './server-tokens/server-tokens.module';
 import { UsersModule } from './users/users.module';
-import { PriceApiModule } from './price-api/price-api.module';
-import { LeaderboardCryptoModule } from './leaderboard-crypto/leaderboard-crypto.module';
 
 @Module({
   imports: [
@@ -89,6 +90,7 @@ import { LeaderboardCryptoModule } from './leaderboard-crypto/leaderboard-crypto
     FileModule,
     PriceApiModule,
     LeaderboardCryptoModule,
+    NotesModule,
   ],
   controllers: [],
   providers: [
