@@ -1,4 +1,5 @@
 import {
+  APP_NAME,
   CHATBASE_APIKEY,
   CHATBASE_MODELID,
   SERVER_URL,
@@ -204,13 +205,14 @@ export class AiChatService {
     //optional sending email verification
     const emailData = {
       email: emailReceipient.toLowerCase(),
-      subject: 'DMCC Sales AI Chat History',
+      subject: `${APP_NAME} Sales AI Chat History`,
       fileLocation: 'dist/template/chat-template.hbs',
       params: {
         id: chatID,
         date: new Date(chatDate).toLocaleString(),
         messages: chatLog,
         bookurl: `${SERVER_URL}/api/appointment/hubspot`,
+        appname: APP_NAME,
       },
     };
 

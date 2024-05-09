@@ -62,3 +62,5 @@ export const HUBSPOT_LANDVAULT_PRIVATE_APP_KEY =
 
 export const PRICE_TICKER_FINANCIAL_PREP =
   process.env.PRICE_TICKER_FINANCIAL_PREP ?? '';
+
+export const APP_NAME = process.env.APP_NAME ?? 'DMCC';

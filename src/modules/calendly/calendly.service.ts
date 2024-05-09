@@ -1,4 +1,7 @@
-import { HUBSPOT_WEBHOOK_VIDEO_CONFERENCE_LINK } from '@common/environment';
+import {
+  APP_NAME,
+  HUBSPOT_WEBHOOK_VIDEO_CONFERENCE_LINK,
+} from '@common/environment';
 import { sha256HashString } from '@common/utils/hash';
 import { BrevoMailerService } from '@modules/brevo-mailer/services/brevo-mailer.service';
 import { HttpService } from '@nestjs/axios';
@@ -134,7 +137,7 @@ export class CalendlyService {
 
     return {
       conferenceId: joinID,
-      conferenceDetails: 'Join DMCC Meeting at ' + joinLink,
+      conferenceDetails: `Join ${APP_NAME} Meeting at ` + joinLink,
       conferenceUrl: joinLink,
       recipients,
     };
@@ -144,7 +147,7 @@ export class CalendlyService {
     //optional sending email verification
     const emailData = {
       email: emailReceipient.toLowerCase(),
-      subject: 'Join Us on DMCC!',
+      subject: `Join Us on ${APP_NAME}!`,
       fileLocation: 'dist/template/email-invite.hbs',
       params: {
         joinLink,
