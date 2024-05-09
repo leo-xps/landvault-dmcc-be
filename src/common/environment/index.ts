@@ -46,6 +46,10 @@ export const HUBSPOT_WEBHOOK_VIDEO_CONFERENCE_LINK =
   process.env.HUBSPOT_WEBHOOK_VIDEO_CONFERENCE_LINK ?? '';
 
 export const SERVER_URL = process.env.SERVER_URL ?? '';
+export const CRYPTO_UID = process.env.SERVER_URL ?? 'cluvr45km004cwumrtpguye5j';
+export const CRYPTO_SSO =
+  process.env.SERVER_URL ??
+  'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJjbHV2cjQ1a20wMDRjd3VtcnRwZ3V5ZTVqIiwiaWQiOiJjbHV2cjQ1a20wMDRjd3VtcnRwZ3V5ZTVqIiwiZW1haWwiOiJhY3N0dWRpbzMxQGdtYWlsLmNvbSIsImlhdCI6MTcxNTAwMzQzNSwiZXhwIjoxNzE1MDg5ODM1fQ.2xXmhiI-rMo4EAUD7RpXIvgsO4EWMjFAInoiZCY7eP1RXGrMFyV5d-gNSByyucBybwCnQH6GLu1CwDvakcywPQ';
 
 export const HUBSPOT_LANDVAULT_APP_ID =
   process.env.HUBSPOT_LANDVAULT_APP_ID ?? '';
