@@ -36,6 +36,7 @@ import { RpmModule } from './rpm/rpm.module';
 import { ServerTokensModule } from './server-tokens/server-tokens.module';
 import { UsersModule } from './users/users.module';
 import { PriceApiModule } from './price-api/price-api.module';
+import { LeaderboardCryptoModule } from './leaderboard-crypto/leaderboard-crypto.module';
 
 @Module({
   imports: [
@@ -87,6 +88,7 @@ import { PriceApiModule } from './price-api/price-api.module';
     AdsModule,
     FileModule,
     PriceApiModule,
+    LeaderboardCryptoModule,
   ],
   controllers: [],
   providers: [
