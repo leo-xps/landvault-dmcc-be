@@ -260,9 +260,9 @@ export class AppointmentsService {
     const userAppointments = await this.db.userAppointments.findMany({
       include: {
         user: {
-          select: {
-            email: true,
-          },
+          // select: {
+          //   email: true,
+          // },
         },
       },
     });
