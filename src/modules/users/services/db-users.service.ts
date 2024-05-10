@@ -114,6 +114,10 @@ export class DbUsersService {
           password: await this.hashPassword(registerUserInput.password),
           phoneNumber: registerUserInput?.phoneNumber,
           isGuest: false,
+          dmccID: registerUserInput?.dmccID,
+          dmccEmail: registerUserInput?.dmccEmail,
+          company: registerUserInput?.company,
+          position: registerUserInput?.position,
           // guestToken: null,
         },
       });
@@ -126,6 +130,8 @@ export class DbUsersService {
           phoneNumber: registerUserInput?.phoneNumber,
           dmccID: registerUserInput?.dmccID,
           dmccEmail: registerUserInput?.dmccEmail,
+          company: registerUserInput?.company,
+          position: registerUserInput?.position,
         },
       });
       //optional

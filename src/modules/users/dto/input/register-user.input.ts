@@ -16,6 +16,14 @@ export class RegisterUserInput {
 
   @IsOptional()
   @IsString()
+  company?: string;
+
+  @IsOptional()
+  @IsString()
+  position?: string;
+
+  @IsOptional()
+  @IsString()
   dmccID?: string;
 
   @IsOptional()
