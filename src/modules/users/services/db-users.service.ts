@@ -736,7 +736,7 @@ export class DbUsersService {
     };
 
     const token = this.jwtService.sign(jwt, {
-      expiresIn: '30d',
+      expiresIn: '9999d',
     });
 
     const bURL = auto ? AUTO_URL : ROOM_URL;
