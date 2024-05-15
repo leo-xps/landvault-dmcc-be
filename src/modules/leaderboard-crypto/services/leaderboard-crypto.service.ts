@@ -44,7 +44,12 @@ export class LeaderboardCryptoService {
   }
 
   // get listed scores
-  async getLeaderboard(skip?: number, take?: number, sortDirection?: string) {
+  async getLeaderboard(
+    contestId = 246,
+    skip?: number,
+    take?: number,
+    sortDirection?: string,
+  ) {
     if (['asc', 'desc'].indexOf(sortDirection) === -1) {
       sortDirection = 'desc';
     }
@@ -66,7 +71,7 @@ export class LeaderboardCryptoService {
         const { data } = await this.httpService.axiosRef.post(
           'https://metaapi.3-verse.io/api/leaderboard-data',
           {
-            contestId: 246,
+            contestId: contestId,
           },
           {
             headers: {
