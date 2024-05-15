@@ -62,6 +62,10 @@ export class LeaderboardCryptoService {
 
     return await this.cache.cachedValueOrFetch(
       {
+        contestId: contestId.toString(),
+        skip: skip.toString(),
+        take: take.toString(),
+        sortDirection: sortDirection,
         key: LeaderboardCryptoService.name,
         name: 'leaderboard-crypto-token',
       },
