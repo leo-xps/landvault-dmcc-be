@@ -18,14 +18,39 @@ export class LeaderboardCryptoController {
   }
 
   // get
+  @Get('tournamentList')
+  async getTournaments() {
+    const tournamentHardCode = process.env.TOURNAMENT_HARD_CODE ?? '[]';
+    const hardCorde = JSON.parse(tournamentHardCode);
+    const tournamentList = [
+      {
+        id: 246,
+        name: 'Crypto Tournament 1',
+        description: 'Crypto Tournament 1',
+        start: '2024-04-01T00:00:00.000Z',
+        end: '2024-06-30T23:59:59.000Z',
+      },
+    ];
+    return {
+      data: hardCorde.length > 0 ? hardCorde : tournamentList,
+    };
+  }
+
+  // get
   @Get('list')
   async getGameDataList(
+    @Query('contestID') contestID = 246,
     @Query('skip') skip: number,
     @Query('take') take: number,
     @Query('sort') sort: string,
   ) {
     return {
-      data: await this.game.getLeaderboard(Number(skip), Number(take), sort),
+      data: await this.game.getLeaderboard(
+        contestID,
+        Number(skip),
+        Number(take),
+        sort,
+      ),
     };
   }
 }
