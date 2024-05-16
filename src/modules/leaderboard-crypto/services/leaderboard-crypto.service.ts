@@ -24,6 +24,7 @@ export class LeaderboardCryptoService {
             ssoToken: CRYPTO_SSO,
           },
         );
+        console.log('token', token.data?.token);
         return token.data?.token;
       },
       5 * 60 * 1000,
