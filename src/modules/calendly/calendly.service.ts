@@ -1,6 +1,7 @@
 import {
   APP_NAME,
   HUBSPOT_WEBHOOK_VIDEO_CONFERENCE_LINK,
+  ROOM_TYPES,
 } from '@common/environment';
 import { sha256HashString } from '@common/utils/hash';
 import { BrevoMailerService } from '@modules/brevo-mailer/services/brevo-mailer.service';
@@ -118,17 +119,12 @@ export class CalendlyService {
       sha256HashString(email + createdAt).substring(0, 7),
     );
 
+    const roomDecode = JSON.parse(ROOM_TYPES);
     const location = eventData.payload.questions_and_answers.find(
       (e) => e.question === 'On what room would you like us to meet?',
-    ) ?? { answer: 'Meeting Room' };
-    const roomDecode = {
-      'Private Room': 'private',
-      'Meeting Room': 'meeting',
-      'Co-Working Space': 'coworking',
-      Auditorium: 'auditorium',
-    };
+    ) ?? { answer: Object.keys(roomDecode)[0] };
     const findOrDefault = (key: string) => {
-      return roomDecode[key] ?? 'meeting';
+      return roomDecode[key] ?? Object.values(roomDecode)[0];
     };
     joinURL.searchParams.append('room', findOrDefault(location.answer));
 
