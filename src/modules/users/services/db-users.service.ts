@@ -246,7 +246,11 @@ export class DbUsersService {
       },
     });
 
-    return { accessToken };
+    const decodedAccessToken = this.jwtService.decode(
+      accessToken,
+    ) as PayloadInterface;
+
+    return { accessToken, uid: newGuest.id, decoded: decodedAccessToken };
   }
 
   async forgotPasswordSendEmail(email: string) {
