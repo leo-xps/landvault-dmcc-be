@@ -186,7 +186,7 @@ export class UsersController {
   ) {
     room = room ?? 'lobby_normal';
     const roomType = room.split('_')[0];
-    const roomEnvironment = '';
+    const roomEnvironment = room.split('_')[1] ?? '';
     const joinData = await this.dbUsersService.roomGuestLogin(
       token,
       roomType,
