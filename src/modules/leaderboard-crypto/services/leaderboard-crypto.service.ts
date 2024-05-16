@@ -1,5 +1,7 @@
 import { CRYPTO_SSO, CRYPTO_UID } from '@common/environment';
 import { NestCacheService } from '@modules/cache/cache.service';
+import { DbService } from '@modules/db/db.service';
+import { DbUsersService } from '@modules/users/services/db-users.service';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 
@@ -8,9 +10,11 @@ export class LeaderboardCryptoService {
   constructor(
     private readonly httpService: HttpService,
     private readonly cache: NestCacheService,
+    private readonly db: DbService,
+    private readonly user: DbUsersService,
   ) {}
 
-  async getLeaderboardCryptoToken() {
+  async _getLeaderboardCryptoToken() {
     return await this.cache.cachedValueOrFetch(
       {
         key: LeaderboardCryptoService.name,
@@ -22,6 +26,32 @@ export class LeaderboardCryptoService {
           {
             uid: CRYPTO_UID,
             ssoToken: CRYPTO_SSO,
+          },
+        );
+        return token.data?.token;
+      },
+      5 * 60 * 1000,
+    );
+  }
+
+  async getLeaderboardCryptoToken() {
+    return await this.cache.cachedValueOrFetch(
+      {
+        key: LeaderboardCryptoService.name,
+        name: 'leaderboard-crypto-token',
+      },
+      async () => {
+        const mockUser = await this.user.generateGuestToken();
+        const token = await this.httpService.axiosRef.post(
+          'https://metaapi.3-verse.io/api/login-third-party',
+          {
+            userData: {
+              uid: mockUser.uid,
+              ssoToken: mockUser.accessToken,
+              source: '',
+              theme: '',
+            },
+            decoded: mockUser.decoded,
           },
         );
         console.log('token', token.data?.token);
