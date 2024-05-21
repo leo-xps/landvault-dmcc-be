@@ -20,6 +20,7 @@ import { AppointmentsModule } from './appointments/appointments.module';
 import { AvaturnModule } from './avaturn/avaturn.module';
 import { BlacklistedModule } from './blacklisted/blacklisted.module';
 import { BrevoMailerModule } from './brevo-mailer/brevo-mailer.module';
+import { BrevoSmsModule } from './brevo-sms/brevo-sms.module';
 import { CalendlyModule } from './calendly/calendly.module';
 import { ChatListModule } from './chat-list/chat-list.module';
 import { CsvGenModule } from './csv-gen/csv-gen.module';
@@ -91,6 +92,7 @@ import { UsersModule } from './users/users.module';
     PriceApiModule,
     LeaderboardCryptoModule,
     NotesModule,
+    BrevoSmsModule,
   ],
   controllers: [],
   providers: [

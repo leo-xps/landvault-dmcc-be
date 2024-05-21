@@ -33,6 +33,7 @@ export class UsersMapper {
       dmccMember: user.dmccMember,
       dmccID: user.dmccID,
       dmccEmail: user.dmccEmail,
+      verified: user.verified,
       canMatch,
     };
   }

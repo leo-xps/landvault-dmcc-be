@@ -122,9 +122,18 @@ export class UsersController {
     return { token };
   }
 
-  @Get('verify-code')
-  async verify(@Body('code') code: number, @Body('email') email: string) {
-    return await this.dbVerificationService.validateOTP(code, email);
+  @Get('send-2fa')
+  @UseGuards(RestAuthGuard)
+  async send2FA(@CurrentUser() user: any, @Query('method') method: string) {
+    return await this.dbUsersService.create2FARequest(
+      user.id,
+      method ?? 'email',
+    );
+  }
+
+  @Post('verify-2fa')
+  async verify2FA(@Body('code') code: string, @Body('email') email: string) {
+    return await this.dbVerificationService.validateOTP(Number(code), email);
   }
 
   @Post('send-forgot-password')
