@@ -44,7 +44,10 @@ export class DbVerificationService {
       where: { code: generateRandomCode },
     });
 
-    return OTP;
+    return {
+      otp: OTP,
+      email: user.email,
+    };
   }
 
   async validateOTP(code: number, email: string) {

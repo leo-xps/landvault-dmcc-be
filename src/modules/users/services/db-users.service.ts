@@ -111,6 +111,7 @@ export class DbUsersService {
         where: { id: registerUserInput.guestId },
         data: {
           email: registerUserInput.email.toLowerCase(),
+          username: registerUserInput?.username,
           password: await this.hashPassword(registerUserInput.password),
           phoneNumber: registerUserInput?.phoneNumber,
           isGuest: false,
@@ -878,5 +879,41 @@ export class DbUsersService {
     });
 
     return { data: 'User updated successfully' };
+  }
+
+  async create2FARequest(userID: string, method: 'email' | 'sms' | string) {
+    const otp = await this.verification.createOTP(undefined, userID);
+
+    if (method === 'email') {
+      console.log('Sending email');
+      await this.sendEmailOTP(otp.email, otp.otp.code.toString());
+    } else if (method === 'sms') {
+      throw new Error('SMS not yet implemented');
+    }
+
+    return { data: '2FA Request sent successfully' };
+  }
+
+  async sendEmailOTP(emailReceipient: string, otpcode: string) {
+    //optional sending email verification
+    const emailData = {
+      email: emailReceipient.toLowerCase(),
+      subject: `Verify Your Account`,
+      fileLocation: 'dist/template/email-invite.hbs',
+      params: {
+        otpcode,
+        time_date: new Date().toLocaleString(),
+      },
+    };
+
+    // console.log(JSON.stringify(emailData));
+
+    await this.email.sendEmailByBrevoTemplate(
+      emailData.email,
+      emailData.subject,
+      process.env.MAILER_BREVO_OTP_CODE || '7',
+      emailData.params,
+    );
+    return true;
   }
 }

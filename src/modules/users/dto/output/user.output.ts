@@ -17,4 +17,5 @@ export class UserOutput {
   dmccMember: boolean;
   dmccID: string;
   dmccEmail: string;
+  verified: boolean;
 }
