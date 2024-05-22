@@ -187,6 +187,17 @@ export class UsersController {
     return await this.dbUsersService.expressLogin(token);
   }
 
+  @Post('uid-login')
+  async uidLogin(@Body('uid') uid: string) {
+    // return login
+    return await this.dbUsersService.uidGuestLogin(uid);
+  }
+
+  @Post('claim-account')
+  async claimAccount(@Body('email') email: string) {
+    // return login
+  }
+
   @Get('appointment-join')
   async appointmentLogin(
     @Query('token') token: string,
