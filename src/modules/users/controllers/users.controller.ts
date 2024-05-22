@@ -194,9 +194,10 @@ export class UsersController {
   }
 
   @Post('claim-account')
-  async claimAccount(@Body('email') email: string) {
+  @UseGuards(RestAuthGuard)
+  async claimAccount(@CurrentUser() user: any, @Body('email') email: string) {
     // return login
-    return await this.dbUsersService.claimAccount(email);
+    return await this.dbUsersService.claimAccount(user.id, email);
   }
 
   @Get('appointment-join')

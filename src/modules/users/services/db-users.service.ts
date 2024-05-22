@@ -283,7 +283,7 @@ export class DbUsersService {
     return { accessToken, uid: uidGuest.id, decoded: decodedAccessToken };
   }
 
-  async claimAccount(email: string) {
+  async claimAccount(userID: string, email: string) {
     let baseEmail = email.split('@')[0].toLowerCase();
     // remove + and everything after it
     const baseEmailExtension = baseEmail.split('+')[1];
@@ -291,13 +291,13 @@ export class DbUsersService {
     const domain = email.split('@')[1];
     const guestEmail =
       `${baseEmail}+dmccguest${baseEmailExtension}@${domain}`.toLowerCase();
-    let uidGuest = await this.db.users.findFirst({
+    let emailGuest = await this.db.users.findFirst({
       where: {
         email: guestEmail,
       },
     });
 
-    if (uidGuest && !uidGuest.isGuest) {
+    if (emailGuest && !emailGuest.isGuest) {
       return {
         message: 'Account already claimed',
         accessToken: '',
@@ -305,8 +305,11 @@ export class DbUsersService {
       };
     }
 
-    if (!uidGuest) {
-      uidGuest = await this.db.users.create({
+    if (!emailGuest) {
+      emailGuest = await this.db.users.update({
+        where: {
+          id: userID,
+        },
         data: {
           isGuest: true,
           username: baseEmail,
@@ -316,9 +319,9 @@ export class DbUsersService {
     }
 
     const payload: PayloadInterface = {
-      uid: uidGuest.id,
-      id: uidGuest.id,
-      email: uidGuest.email,
+      uid: emailGuest.id,
+      id: emailGuest.id,
+      email: emailGuest.email,
     };
 
     const accessToken: string = this.jwtService.sign(payload, {
@@ -331,7 +334,7 @@ export class DbUsersService {
 
     return {
       accessToken,
-      uid: uidGuest.id,
+      uid: emailGuest.id,
       decoded: decodedAccessToken,
       message: '',
     };
