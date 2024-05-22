@@ -70,12 +70,12 @@ export class DbUsersService {
   }
 
   async registerUser(registerUserInput: RegisterUserInput) {
+    let email = registerUserInput.email.toLowerCase();
+    // remove dmccguest from email
+    email = email.replace('dmccguest', '');
     const userExist = await this.db.users.findFirst({
       where: {
-        OR: [
-          { email: registerUserInput.email.toLowerCase() },
-          { username: registerUserInput.username },
-        ],
+        OR: [{ email: email }, { username: registerUserInput.username }],
       },
     });
 
@@ -252,6 +252,89 @@ export class DbUsersService {
     ) as PayloadInterface;
 
     return { accessToken, uid: newGuest.id, decoded: decodedAccessToken };
+  }
+
+  async uidGuestLogin(uid: string) {
+    const uidGuest = await this.db.users.findFirst({
+      where: {
+        isGuest: true,
+        id: uid,
+      },
+    });
+
+    if (!uidGuest) {
+      throw new NotFoundException(this.i18n.translate('user.USER_NOT_FOUND'));
+    }
+
+    const payload: PayloadInterface = {
+      uid: uidGuest.id,
+      id: uidGuest.id,
+      email: uidGuest.email,
+    };
+
+    const accessToken: string = this.jwtService.sign(payload, {
+      expiresIn: '99y',
+    });
+
+    const decodedAccessToken = this.jwtService.decode(
+      accessToken,
+    ) as PayloadInterface;
+
+    return { accessToken, uid: uidGuest.id, decoded: decodedAccessToken };
+  }
+
+  async claimAccount(email: string) {
+    let baseEmail = email.split('@')[0].toLowerCase();
+    // remove + and everything after it
+    const baseEmailExtension = baseEmail.split('+')[1];
+    baseEmail = baseEmail.split('+')[0];
+    const domain = email.split('@')[1];
+    const guestEmail =
+      `${baseEmail}+dmccguest${baseEmailExtension}@${domain}`.toLowerCase();
+    let uidGuest = await this.db.users.findFirst({
+      where: {
+        email: guestEmail,
+      },
+    });
+
+    if (uidGuest && !uidGuest.isGuest) {
+      return {
+        message: 'Account already claimed',
+        accessToken: '',
+        uid: '',
+      };
+    }
+
+    if (!uidGuest) {
+      uidGuest = await this.db.users.create({
+        data: {
+          isGuest: true,
+          username: baseEmail,
+          email: guestEmail,
+        },
+      });
+    }
+
+    const payload: PayloadInterface = {
+      uid: uidGuest.id,
+      id: uidGuest.id,
+      email: uidGuest.email,
+    };
+
+    const accessToken: string = this.jwtService.sign(payload, {
+      expiresIn: '99y',
+    });
+
+    const decodedAccessToken = this.jwtService.decode(
+      accessToken,
+    ) as PayloadInterface;
+
+    return {
+      accessToken,
+      uid: uidGuest.id,
+      decoded: decodedAccessToken,
+      message: '',
+    };
   }
 
   async forgotPasswordSendEmail(email: string) {
