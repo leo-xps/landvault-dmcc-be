@@ -196,6 +196,7 @@ export class UsersController {
   @Post('claim-account')
   async claimAccount(@Body('email') email: string) {
     // return login
+    return await this.dbUsersService.claimAccount(email);
   }
 
   @Get('appointment-join')
