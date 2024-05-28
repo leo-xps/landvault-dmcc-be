@@ -329,7 +329,7 @@ export class UsersController {
     @Headers('lv-srv-adm') srvToken: string,
     @Body('data')
     data: {
-      userID: string;
+      email: string;
       dmccMember: boolean;
     }[],
   ) {
@@ -340,7 +340,7 @@ export class UsersController {
     }
 
     for (const item of data) {
-      await this.dbUsersService.setDMCCMember(item.userID, item.dmccMember);
+      await this.dbUsersService.setDMCCMember(item.email, item.dmccMember);
     }
 
     return {

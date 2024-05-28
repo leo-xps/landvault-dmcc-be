@@ -977,9 +977,11 @@ export class DbUsersService {
 
   // dmcc memebr
 
-  async setDMCCMember(userID: string, dmccMember: boolean) {
+  async setDMCCMember(email: string, dmccMember: boolean) {
     await this.db.users.update({
-      where: { id: userID },
+      where: {
+        email,
+      },
       data: {
         dmccMember,
       },
