@@ -67,3 +67,5 @@ export const APP_NAME = process.env.APP_NAME ?? 'DMCC';
 export const ROOM_TYPES =
   process.env.ROOM_TYPES ??
   '{"Private Room":"private","Meeting Room":"meeting","Co-Working Space":"coworking","Auditorium":"auditorium"}';
+
+export const FORCE_2FA = (process.env.FORCE_2FA ?? 'false') === 'true';

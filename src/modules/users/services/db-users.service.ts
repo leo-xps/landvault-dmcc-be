@@ -1,4 +1,4 @@
-import { AUTO_URL, ROOM_URL } from '@common/environment';
+import { AUTO_URL, FORCE_2FA, ROOM_URL } from '@common/environment';
 import { sha256HashString } from '@common/utils/hash';
 import { BlacklistedService } from '@modules/blacklisted/services/blacklisted.service';
 import { BrevoMailerService } from '@modules/brevo-mailer/services/brevo-mailer.service';
@@ -87,7 +87,28 @@ export class DbUsersService {
       );
     }
 
-    let code;
+    // let code;
+
+    if (FORCE_2FA) {
+      const accessToken = registerUserInput.token2FA;
+
+      if (!accessToken) {
+        throw new UnprocessableEntityException(
+          this.i18n.translate('user.INVALID_2FA_TOKEN'),
+        );
+      }
+
+      const verified = await this.verification.validateOTPToken(accessToken, {
+        email: registerUserInput.email,
+        phone: registerUserInput.phoneNumber,
+      });
+
+      if (!verified.verified) {
+        throw new UnprocessableEntityException(
+          this.i18n.translate('user.INVALID_2FA_TOKEN'),
+        );
+      }
+    }
 
     if (registerUserInput.guestId) {
       const guestData = await this.db.users.findUnique({
@@ -136,21 +157,21 @@ export class DbUsersService {
         },
       });
       //optional
-      code = await this.verification.createOTP(
-        registerUserInput.email.toLowerCase(),
-        undefined,
-      );
+      // code = await this.verification.createOTP(
+      //   registerUserInput.email.toLowerCase(),
+      //   undefined,
+      // );
     }
 
     //optional sending email verification
-    const emailData = {
-      email: registerUserInput.email.toLowerCase(),
-      subject: 'Registration',
-      fileLocation: 'dist/template/email-registration-verification.hbs',
-      params: {
-        OTP: code.code,
-      },
-    };
+    // const emailData = {
+    //   email: registerUserInput.email.toLowerCase(),
+    //   subject: 'Registration',
+    //   fileLocation: 'dist/template/email-registration-verification.hbs',
+    //   params: {
+    //     OTP: code.code,
+    //   },
+    // };
 
     // await this.email.sendEmailFromTemplate(
     //   emailData.email,
@@ -967,12 +988,28 @@ export class DbUsersService {
     return { data: 'User updated successfully' };
   }
 
-  async create2FARequest(userID: string, method: 'email' | 'sms' | string) {
-    const otp = await this.verification.createOTP(undefined, userID);
+  async create2FARequest(contact: string, method: 'email' | 'sms' | string) {
+    const otp = await this.verification.createOTP(undefined, contact);
 
     if (method === 'email') {
       console.log('Sending email');
       await this.sendEmailOTP(otp.email, otp.otp.code.toString());
+    } else if (method === 'sms') {
+      throw new Error('SMS not yet implemented');
+    }
+
+    return { data: '2FA Request sent successfully' };
+  }
+
+  async create2FAPassRequest(
+    contact: string,
+    method: 'email' | 'sms' | string,
+  ) {
+    const otp = await this.verification.createOTPPass(contact, method);
+
+    if (method === 'email') {
+      console.log('Sending email');
+      await this.sendEmailOTP(contact, otp.otp.code.toString());
     } else if (method === 'sms') {
       throw new Error('SMS not yet implemented');
     }
