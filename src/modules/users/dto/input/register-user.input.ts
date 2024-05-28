@@ -36,4 +36,8 @@ export class RegisterUserInput {
 
   @IsOptional()
   guestId: string;
+
+  @IsOptional()
+  @IsString()
+  token2FA?: string;
 }

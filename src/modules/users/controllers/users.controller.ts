@@ -220,6 +220,28 @@ export class UsersController {
     return res.redirect(joinData.joinURL);
   }
 
+  @Post('create-2fa-pass')
+  async request_email_validate(
+    @Body('method') method: string,
+    @Body('contact') contact: string,
+  ) {
+    return await this.dbUsersService.create2FAPassRequest(
+      contact,
+      method ?? 'email',
+    );
+  }
+
+  @Post('verify-2fa-pass')
+  async validate_email_validate(
+    @Body('code') code: string,
+    @Body('contact') contact: string,
+  ) {
+    return await this.dbVerificationService.validateOTPPass(
+      Number(code),
+      contact,
+    );
+  }
+
   @Post('create-shareable-link-auto')
   async createRoomAuto(
     @Headers('lv-srv-adm') srvToken: string,

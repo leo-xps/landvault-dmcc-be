@@ -84,6 +84,111 @@ export class DbVerificationService {
     return { verified: true };
   }
 
+  async createOTPPass(contact: string, type: string) {
+    const generateRandomCode = Math.floor(100000 + Math.random() * 900000);
+
+    const jwt: any = {
+      contact: contact,
+      type: type,
+      code: generateRandomCode,
+    };
+
+    const accessToken: string = this.jwtService.sign(jwt, {
+      expiresIn: '1d',
+    });
+
+    await this.db.otpPass.create({
+      data: {
+        code: generateRandomCode,
+        token: accessToken,
+      },
+    });
+
+    const OTP = await this.db.otpPass.findFirst({
+      where: { code: generateRandomCode },
+    });
+
+    return {
+      otp: OTP,
+      contact: contact,
+      type: type,
+    };
+  }
+
+  async validateOTPPass(code: number, contact: string) {
+    const OTP = await this.db.otpPass.findFirst({
+      where: { code },
+    });
+
+    if (!OTP) {
+      throw new NotFoundException(
+        this.i18n.translate('verification.INVALID_CODE'),
+      );
+    }
+
+    const token = await this.verifyJWT(OTP.token);
+
+    if (token.expired) {
+      throw new UnprocessableEntityException(
+        this.i18n.translate('verification.OTP_EXPIRED'),
+      );
+    }
+
+    switch (token.payload.type) {
+      case 'email':
+        if (contact !== token.payload.contact) {
+          throw new UnprocessableEntityException(
+            this.i18n.translate('verification.INVALID_EMAIL'),
+          );
+        }
+        break;
+      case 'sms':
+        if (contact !== token.payload.contact) {
+          throw new UnprocessableEntityException(
+            this.i18n.translate('verification.INVALID_PHONE'),
+          );
+        }
+        break;
+    }
+
+    return { verified: true, token: OTP.token };
+  }
+
+  async validateOTPToken(
+    tokenString: string,
+    contact: {
+      email?: string;
+      phone?: string;
+    },
+  ) {
+    const token = await this.verifyJWT(tokenString);
+
+    if (token.expired) {
+      throw new UnprocessableEntityException(
+        this.i18n.translate('verification.OTP_EXPIRED'),
+      );
+    }
+
+    switch (token.payload.type) {
+      case 'email':
+        if (contact.email !== token.payload.contact) {
+          throw new UnprocessableEntityException(
+            this.i18n.translate('verification.INVALID_EMAIL'),
+          );
+        }
+        break;
+      case 'sms':
+        if (contact.phone !== token.payload.contact) {
+          throw new UnprocessableEntityException(
+            this.i18n.translate('verification.INVALID_PHONE'),
+          );
+        }
+        break;
+    }
+
+    return { verified: true };
+  }
+
   async verifyJWT(token: string) {
     try {
       return { payload: this.jwtService.verify(token), expired: false };

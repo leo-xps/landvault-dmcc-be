@@ -195,6 +195,15 @@ model Otp {
   @@map("otp")
 }
 
+model OtpPass {
+  id        String   @id @default(cuid())
+  code      Int
+  token     String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("otp_pass")
+}
+
 model Appointments {
   id              String             @id @default(cuid())
   startTime       DateTime           @map("start_time")
