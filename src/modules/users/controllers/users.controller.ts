@@ -317,7 +317,8 @@ export class UsersController {
 
   @Post('get-user-info-by-email')
   async getUsersInfoByMail(@Body() data: GetUserInfoByMailRequest) {
-    return this.dbUsersService.getUserInfoByMail(data);
+    const response = this.dbUsersService.getUserInfoByMail(data);
+    return { data: UsersMapper.displayOne(response) };
   }
 
   @Post('update-info')
