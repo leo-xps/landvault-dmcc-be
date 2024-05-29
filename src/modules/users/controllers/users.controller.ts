@@ -23,7 +23,10 @@ import {
   UpdateUserInfo,
   UpdateUserInput,
 } from '../dto/input/update-user.input';
-import { GetUserRequest } from '../dto/interfaces/getuser.interface';
+import {
+  GetUserInfoByMailRequest,
+  GetUserRequest,
+} from '../dto/interfaces/getuser.interface';
 import { UsersMapper } from '../dto/mapper/users.mapper';
 import { UserOutput } from '../dto/output/user.output';
 import { DbUsersService } from '../services/db-users.service';
@@ -310,6 +313,11 @@ export class UsersController {
   @Post('get-user-info')
   async getUsersInfo(@Body() data: GetUserRequest) {
     return this.dbUsersService.getUserTradingGame(data);
+  }
+
+  @Post('get-user-info-by-email')
+  async getUsersInfoByMail(@Body() data: GetUserInfoByMailRequest) {
+    return this.dbUsersService.getUserInfoByMail(data);
   }
 
   @Post('update-info')
