@@ -69,3 +69,8 @@ export const ROOM_TYPES =
   '{"Private Room":"private","Meeting Room":"meeting","Co-Working Space":"coworking","Auditorium":"auditorium"}';
 
 export const FORCE_2FA = (process.env.FORCE_2FA ?? 'false') === 'true';
+
+export const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID ?? '';
+export const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN ?? '';
+export const TWILIO_VERIFICATION_SID =
+  process.env.TWILIO_VERIFICATION_SID ?? '';

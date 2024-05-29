@@ -3,6 +3,9 @@ export class GetUserRequest {
   pno: string;
   psz: string;
 }
+export class GetUserInfoByMailRequest {
+  email: string;
+}
 
 export interface GetUserResponse {
   msg: {

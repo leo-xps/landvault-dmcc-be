@@ -1,4 +1,10 @@
-import { AUTO_URL, FORCE_2FA, ROOM_URL } from '@common/environment';
+import {
+  AUTO_URL,
+  FORCE_2FA,
+  ROOM_URL,
+  TWILIO_ACCOUNT_SID,
+  TWILIO_AUTH_TOKEN,
+} from '@common/environment';
 import { sha256HashString } from '@common/utils/hash';
 import { BlacklistedService } from '@modules/blacklisted/services/blacklisted.service';
 import { BrevoMailerService } from '@modules/brevo-mailer/services/brevo-mailer.service';
@@ -10,6 +16,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import axios from 'axios';
 import * as bcrypt from 'bcrypt';
 import * as moment from 'moment';
 import { I18nService } from 'nestjs-i18n';
@@ -19,6 +26,7 @@ import {
   UpdateUserInput,
 } from '../dto/input/update-user.input';
 import {
+  GetUserInfoByMailRequest,
   GetUserRequest,
   GetUserResponse,
 } from '../dto/interfaces/getuser.interface';
@@ -931,6 +939,20 @@ export class DbUsersService {
 
   // trading game
 
+  async getUserInfoByMail(data: GetUserInfoByMailRequest) {
+    const user = await this.db.users.findFirst({
+      where: {
+        email: data.email,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(this.i18n.translate('user.USER_NOT_FOUND'));
+    }
+
+    return user;
+  }
+
   async getUserTradingGame(data: GetUserRequest): Promise<GetUserResponse> {
     const response: GetUserResponse = {
       msg: {
@@ -1040,5 +1062,21 @@ export class DbUsersService {
       emailData.params,
     );
     return true;
+  }
+
+  async sendPhoneOTP(phoneNumber: string, otpcode: string) {
+    const otpCall = await axios.post(
+      'https://verify.twilio.com/v2/Services/VA46f21b50b08c8dd3f4ad1da58c846b88/Verifications',
+      {
+        To: phoneNumber,
+        Channel: 'sms',
+      },
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Basic ${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`,
+        },
+      },
+    );
   }
 }
