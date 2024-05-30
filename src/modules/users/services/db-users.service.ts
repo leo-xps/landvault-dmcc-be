@@ -1,10 +1,4 @@
-import {
-  APP_NAME,
-  APP_SUPPORT_EMAIL,
-  AUTO_URL,
-  FORCE_2FA,
-  ROOM_URL,
-} from '@common/environment';
+import { APP_NAME, AUTO_URL, FORCE_2FA, ROOM_URL } from '@common/environment';
 import { sha256HashString } from '@common/utils/hash';
 import { BlacklistedService } from '@modules/blacklisted/services/blacklisted.service';
 import { BrevoMailerService } from '@modules/brevo-mailer/services/brevo-mailer.service';
@@ -1077,7 +1071,7 @@ export class DbUsersService {
     await this.sms.sendSMS({
       sender: 'OTP',
       recipient: phoneNumber,
-      content: `To proceed with your registration with ${APP_NAME}.  Here is your verification code: \n\n${otpcode}\n\nThis code will be vald for 5 minutes. Please do not share this code with anyone. If this is not you requesting, please contact us at ${APP_SUPPORT_EMAIL}.`,
+      content: `To proceed with your registration with ${APP_NAME}.  Here is your verification code: ${otpcode}. This code will be vald for 5 minutes. Please do not share this code with anyone.`,
     });
   }
 }
