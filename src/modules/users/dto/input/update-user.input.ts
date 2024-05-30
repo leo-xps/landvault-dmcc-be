@@ -58,4 +58,10 @@ export class UpdateUserInfo {
     each: true,
   })
   tags?: string[];
+
+  @IsOptional()
+  @IsString({
+    each: true,
+  })
+  avatarUrl?: string;
 }

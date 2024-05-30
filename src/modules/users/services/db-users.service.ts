@@ -524,6 +524,7 @@ export class DbUsersService {
         company: updateUserInput?.company,
         dmccID: updateUserInput?.dmccID,
         dmccEmail: updateUserInput?.dmccEmail,
+        avatarUrl: updateUserInput?.avatarUrl,
       },
     });
 

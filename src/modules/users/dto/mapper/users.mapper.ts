@@ -34,6 +34,7 @@ export class UsersMapper {
       dmccID: user.dmccID,
       dmccEmail: user.dmccEmail,
       verified: user.verified,
+      avatarUrl: user.avatarUrl,
       canMatch,
     };
   }
