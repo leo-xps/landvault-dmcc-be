@@ -15,6 +15,7 @@ model Users {
   email           String?            @unique
   username        String?            @unique
   password        String?
+  avatarUrl       String?            @map("avatar_url")
   isGuest         Boolean            @default(false) @map("is_guest")
   createdAt       DateTime?          @default(now()) @map("created_at")
   updatedAt       DateTime?          @updatedAt @map("updated_at")
