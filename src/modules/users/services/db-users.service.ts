@@ -11,7 +11,6 @@ import { BrevoMailerService } from '@modules/brevo-mailer/services/brevo-mailer.
 import { BrevoSmsService } from '@modules/brevo-sms/services/brevo-sms.service';
 import { DbService } from '@modules/db/db.service';
 import {
-  HttpException,
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
@@ -1039,12 +1038,12 @@ export class DbUsersService {
       await this.sendEmailOTP(contact, otp.otp.code.toString());
     } else if (method === 'sms') {
       console.log('Sending sms');
-      if (!contact.startsWith('+')) {
-        throw new HttpException(
-          "Invalid phone number. Must start with '+'",
-          400,
-        );
-      }
+      // if (!contact.startsWith('+')) {
+      //   throw new HttpException(
+      //     "Invalid phone number. Must start with '+'",
+      //     400,
+      //   );
+      // }
       await this.sendPhoneOTP(contact, otp.otp.code.toString());
     }
 
@@ -1076,7 +1075,7 @@ export class DbUsersService {
 
   async sendPhoneOTP(phoneNumber: string, otpcode: string) {
     await this.sms.sendSMS({
-      sender: APP_NAME,
+      sender: 'OTP',
       recipient: phoneNumber,
       content: `To proceed with your registration with ${APP_NAME}.  Here is your verification code: \n\n${otpcode}\n\nThis code will be vald for 5 minutes. Please do not share this code with anyone. If this is not you requesting, please contact us at ${APP_SUPPORT_EMAIL}.`,
     });
