@@ -9,17 +9,22 @@ export class BrevoSmsService {
     const apiKey = defaultClient.authentications['api-key'];
     apiKey.apiKey = MAILER_BREVO_API_KEY;
 
-    console.log(Sib);
+    // console.log(Sib);
     this.apiInstance = new Sib.TransactionalSMSApi();
   }
 
-  sendSMS(opts: { sender: string; recipient: string; content: string }) {
+  async sendSMS(opts: { sender: string; recipient: string; content: string }) {
     const sendTransacSms = new Sib.SendTransacSms();
-    sendTransacSms.sender = opts.sender;
+    sendTransacSms.sender = 'LANDVAULT';
     sendTransacSms.recipient = opts.recipient;
     sendTransacSms.content = opts.content;
     sendTransacSms.type = 'transactional';
 
-    return this.apiInstance.sendTransacSms(sendTransacSms);
+    try {
+      await this.apiInstance.sendTransacSms(sendTransacSms);
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to send transactional SMS');
+    }
   }
 }
