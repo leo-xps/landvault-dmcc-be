@@ -36,6 +36,7 @@ export class UsersMapper {
       verified: user.verified,
       avatarUrl: user.avatarUrl,
       canMatch,
+      description: user.description,
     };
   }
   static displayAll(users: any[]): UserOutput[] {

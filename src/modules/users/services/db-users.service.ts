@@ -143,6 +143,8 @@ export class DbUsersService {
           dmccEmail: registerUserInput?.dmccEmail,
           company: registerUserInput?.company,
           position: registerUserInput?.position,
+          avatarUrl: registerUserInput?.avatarUrl,
+          description: registerUserInput?.description,
           // guestToken: null,
         },
       });
@@ -157,6 +159,8 @@ export class DbUsersService {
           dmccEmail: registerUserInput?.dmccEmail,
           company: registerUserInput?.company,
           position: registerUserInput?.position,
+          description: registerUserInput?.description,
+          avatarUrl: registerUserInput?.avatarUrl,
         },
       });
       //optional
@@ -525,6 +529,7 @@ export class DbUsersService {
         dmccID: updateUserInput?.dmccID,
         dmccEmail: updateUserInput?.dmccEmail,
         avatarUrl: updateUserInput?.avatarUrl,
+        description: updateUserInput?.description,
       },
     });
 
@@ -647,6 +652,8 @@ export class DbUsersService {
         model: user.AvaturnModels?.[0]?.modelID ?? '',
         company: user.company,
         position: user.position,
+        description: user.description,
+        avatarUrl: user.avatarUrl,
         tags: userTags,
         matchingTags,
       };

@@ -24,6 +24,10 @@ export class RegisterUserInput {
 
   @IsOptional()
   @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsString()
   dmccID?: string;
 
   @IsOptional()
@@ -33,6 +37,10 @@ export class RegisterUserInput {
   @IsNotEmpty()
   @IsString()
   password: string;
+
+  @IsNotEmpty()
+  @IsString()
+  avatarUrl: string;
 
   @IsOptional()
   guestId: string;
