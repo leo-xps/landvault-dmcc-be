@@ -68,6 +68,9 @@ export const ROOM_TYPES =
   process.env.ROOM_TYPES ??
   '{"Private Room":"private","Meeting Room":"meeting","Co-Working Space":"coworking","Auditorium":"auditorium"}';
 
+export const APP_SUPPORT_EMAIL =
+  process.env.APP_SUPPORT_EMAIL ?? 'LVdevs@virtualhq.co';
+
 export const FORCE_2FA = (process.env.FORCE_2FA ?? 'false') === 'true';
 
 export const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID ?? '';

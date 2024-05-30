@@ -1,22 +1,23 @@
 import {
+  APP_NAME,
+  APP_SUPPORT_EMAIL,
   AUTO_URL,
   FORCE_2FA,
   ROOM_URL,
-  TWILIO_ACCOUNT_SID,
-  TWILIO_AUTH_TOKEN,
 } from '@common/environment';
 import { sha256HashString } from '@common/utils/hash';
 import { BlacklistedService } from '@modules/blacklisted/services/blacklisted.service';
 import { BrevoMailerService } from '@modules/brevo-mailer/services/brevo-mailer.service';
+import { BrevoSmsService } from '@modules/brevo-sms/services/brevo-sms.service';
 import { DbService } from '@modules/db/db.service';
 import {
+  HttpException,
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import axios from 'axios';
 import * as bcrypt from 'bcrypt';
 import * as moment from 'moment';
 import { I18nService } from 'nestjs-i18n';
@@ -42,6 +43,7 @@ export class DbUsersService {
     private readonly blacklistedService: BlacklistedService,
     private readonly verification: DbVerificationService,
     private readonly email: BrevoMailerService,
+    private readonly sms: BrevoSmsService,
   ) {}
 
   @Cron(CronExpression.EVERY_6_HOURS)
@@ -1019,7 +1021,8 @@ export class DbUsersService {
       console.log('Sending email');
       await this.sendEmailOTP(otp.email, otp.otp.code.toString());
     } else if (method === 'sms') {
-      throw new Error('SMS not yet implemented');
+      console.log('Sending sms');
+      await this.sendPhoneOTP(contact, otp.otp.code.toString());
     }
 
     return { data: '2FA Request sent successfully' };
@@ -1035,7 +1038,14 @@ export class DbUsersService {
       console.log('Sending email');
       await this.sendEmailOTP(contact, otp.otp.code.toString());
     } else if (method === 'sms') {
-      throw new Error('SMS not yet implemented');
+      console.log('Sending sms');
+      if (!contact.startsWith('+')) {
+        throw new HttpException(
+          "Invalid phone number. Must start with '+'",
+          400,
+        );
+      }
+      await this.sendPhoneOTP(contact, otp.otp.code.toString());
     }
 
     return { data: '2FA Request sent successfully' };
@@ -1065,18 +1075,10 @@ export class DbUsersService {
   }
 
   async sendPhoneOTP(phoneNumber: string, otpcode: string) {
-    const otpCall = await axios.post(
-      'https://verify.twilio.com/v2/Services/VA46f21b50b08c8dd3f4ad1da58c846b88/Verifications',
-      {
-        To: phoneNumber,
-        Channel: 'sms',
-      },
-      {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Basic ${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`,
-        },
-      },
-    );
+    await this.sms.sendSMS({
+      sender: APP_NAME,
+      recipient: phoneNumber,
+      content: `To proceed with your registration with ${APP_NAME}.  Here is your verification code: \n\n${otpcode}\n\nThis code will be vald for 5 minutes. Please do not share this code with anyone. If this is not you requesting, please contact us at ${APP_SUPPORT_EMAIL}.`,
+    });
   }
 }

@@ -6,15 +6,18 @@ export class BrevoSmsController {
   constructor(private readonly brevoMailerService: BrevoSmsService) {}
 
   @Post('send')
-  async sendTransactionalEmail() {
-    console.log('Sending SMS');
+  async sendTransactionalSms(args: {
+    sender: string;
+    recipient: string;
+    content: string;
+  }) {
     try {
       const result = await this.brevoMailerService.sendSMS({
-        sender: 'Brevo',
-        recipient: '639777384315',
-        content: 'Hello, this is a test message from Brevo',
+        sender: args.sender,
+        recipient: args.recipient,
+        content: args.content,
       });
-      return { message: 'Email sent successfully', result };
+      return { message: 'SMS sent successfully', result };
     } catch (error) {
       console.error(error);
       throw new Error('Failed to send transactional email');
