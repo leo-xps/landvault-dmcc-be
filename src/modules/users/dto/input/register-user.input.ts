@@ -38,11 +38,12 @@ export class RegisterUserInput {
   @IsString()
   password: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   avatarUrl: string;
 
   @IsOptional()
+  @IsString()
   guestId: string;
 
   @IsOptional()

@@ -61,6 +61,7 @@ export class UsersController {
   async createUser(
     @Body() registerUserInput: RegisterUserInput,
   ): Promise<UserOutput> {
+    console.log('registerUserInput');
     const data = await this.dbUsersService.registerUser(registerUserInput);
     return UsersMapper.displayOne(data);
   }
