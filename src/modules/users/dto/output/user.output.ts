@@ -19,5 +19,6 @@ export class UserOutput {
   dmccEmail: string;
   verified: boolean;
   avatarUrl: string;
+  location: string;
   description: string;
 }

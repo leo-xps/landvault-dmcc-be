@@ -64,8 +64,10 @@ export class UpdateUserInfo {
   tags?: string[];
 
   @IsOptional()
-  @IsString({
-    each: true,
-  })
+  @IsString()
   avatarUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  location?: string;
 }

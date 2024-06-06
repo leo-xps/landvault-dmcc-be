@@ -40,7 +40,11 @@ export class RegisterUserInput {
 
   @IsOptional()
   @IsString()
-  avatarUrl: string;
+  avatarUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  location?: string;
 
   @IsOptional()
   @IsString()
