@@ -144,6 +144,7 @@ export class DbUsersService {
           company: registerUserInput?.company,
           position: registerUserInput?.position,
           avatarUrl: registerUserInput?.avatarUrl,
+          location: registerUserInput?.location,
           description: registerUserInput?.description,
           // guestToken: null,
         },
@@ -161,6 +162,7 @@ export class DbUsersService {
           position: registerUserInput?.position,
           description: registerUserInput?.description,
           avatarUrl: registerUserInput?.avatarUrl,
+          location: registerUserInput?.location,
         },
       });
       //optional
@@ -529,6 +531,7 @@ export class DbUsersService {
         dmccID: updateUserInput?.dmccID,
         dmccEmail: updateUserInput?.dmccEmail,
         avatarUrl: updateUserInput?.avatarUrl,
+        location: updateUserInput?.location,
         description: updateUserInput?.description,
       },
     });
@@ -654,6 +657,7 @@ export class DbUsersService {
         position: user.position,
         description: user.description,
         avatarUrl: user.avatarUrl,
+        location: user.location,
         tags: userTags,
         matchingTags,
       };
