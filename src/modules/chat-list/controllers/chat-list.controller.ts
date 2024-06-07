@@ -29,16 +29,13 @@ export class ChatListController {
 
   // delete
   @Post('/reset')
-  async resetChatListData(
-    @Headers('lv-srv-adm') srvToken: string,
-    @Param('id') chatID: string,
-  ) {
+  async resetChatListData(@Headers('lv-srv-adm') srvToken: string) {
     const valid = await this.checkAdminTokenValidity(srvToken);
 
     if (!valid) {
       return { error: 'Invalid server admin token' };
     }
-    return this.chat.deleteChatListData(chatID);
+    return this.chat.resetChatList();
   }
 
   // set
