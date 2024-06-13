@@ -313,6 +313,35 @@ export class DbUsersService {
     return { accessToken, uid: uidGuest.id, decoded: decodedAccessToken };
   }
 
+  async emailLogin(email: string, isAdmin?: boolean) {
+    const uidUser = await this.db.users.findFirst({
+      where: {
+        isGuest: isAdmin ? undefined : true,
+        email: email.toLowerCase(),
+      },
+    });
+
+    if (!uidUser) {
+      throw new NotFoundException(this.i18n.translate('user.USER_NOT_FOUND'));
+    }
+
+    const payload: PayloadInterface = {
+      uid: uidUser.id,
+      id: uidUser.id,
+      email: uidUser.email,
+    };
+
+    const accessToken: string = this.jwtService.sign(payload, {
+      expiresIn: '99y',
+    });
+
+    const decodedAccessToken = this.jwtService.decode(
+      accessToken,
+    ) as PayloadInterface;
+
+    return { accessToken, uid: uidUser.id, decoded: decodedAccessToken };
+  }
+
   async claimAccount(userID: string, email: string) {
     let baseEmail = email.split('@')[0].toLowerCase();
     // remove + and everything after it
