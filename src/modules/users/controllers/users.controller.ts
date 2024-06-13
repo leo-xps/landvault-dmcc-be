@@ -197,6 +197,19 @@ export class UsersController {
     return await this.dbUsersService.uidGuestLogin(uid);
   }
 
+  @Post('email-login')
+  async emailLogin(
+    @Headers('lv-srv-adm') srvToken: string,
+    @Body('email') email: string,
+  ) {
+    const valid = await this.checkAdminTokenValidity(srvToken);
+    if (!valid) {
+      throw new UnauthorizedException('Invalid Admin Token');
+    }
+    // return login
+    return await this.dbUsersService.emailLogin(email, valid);
+  }
+
   @Post('claim-account')
   @UseGuards(RestAuthGuard)
   async claimAccount(@CurrentUser() user: any, @Body('email') email: string) {
