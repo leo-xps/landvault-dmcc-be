@@ -15,6 +15,7 @@ export class AppointmentMapper {
       endTime: appointment.endTime,
       code: appointment.code,
       roomType: appointment.roomType,
+      roomMode: appointment.roomMode,
       roomEnvironment: appointment.roomEnvironment,
       participants: appointment.participants,
       guestList: appointment.guestList,

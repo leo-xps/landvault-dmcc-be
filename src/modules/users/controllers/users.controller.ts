@@ -221,14 +221,17 @@ export class UsersController {
   async appointmentLogin(
     @Query('token') token: string,
     @Query('room') room: string,
+    @Query('mode') mode: string,
     @Res() res,
   ) {
     room = room ?? 'lobby_normal';
     const roomType = room.split('_')[0];
     const roomEnvironment = room.split('_')[1] ?? '';
+    const roomMode = mode ?? 'normal';
     const joinData = await this.dbUsersService.roomGuestLogin(
       token,
       roomType,
+      roomMode,
       roomEnvironment,
     );
 
@@ -265,6 +268,7 @@ export class UsersController {
     @Body('roomName') roomName,
     @Body('roomCode') roomCode,
     @Body('roomType') roomType,
+    @Body('roomMode') roomMode,
     @Body('roomEnvironment') roomEnvironment,
   ) {
     const valid = await this.checkAdminTokenValidity(srvToken);
@@ -279,6 +283,7 @@ export class UsersController {
         code: roomCode,
         roomName: roomName,
         roomType: roomType,
+        roomMode: roomMode,
         roomEnvironment: roomEnvironment,
         startTime: now,
         endTime: endTime,
@@ -298,6 +303,7 @@ export class UsersController {
     @Body('roomName') roomName,
     @Body('roomCode') roomCode,
     @Body('roomType') roomType,
+    @Body('roomMode') roomMode,
     @Body('roomEnvironment') roomEnvironment,
   ) {
     const valid = await this.checkAdminTokenValidity(srvToken);
@@ -312,6 +318,7 @@ export class UsersController {
         code: roomCode,
         roomName: roomName,
         roomType: roomType,
+        roomMode: roomMode,
         roomEnvironment: roomEnvironment,
         startTime: now,
         endTime: endTime,

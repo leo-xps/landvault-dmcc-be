@@ -119,6 +119,7 @@ export class AppointmentsService {
             ? createAppointmentInput.code
             : uniqueCode,
           roomType: createAppointmentInput.roomType,
+          roomMode: createAppointmentInput.roomMode,
           roomEnvironment: createAppointmentInput.roomEnvironment,
           guestList: guestList,
         },
@@ -196,6 +197,7 @@ export class AppointmentsService {
         location: updateAppointmentInput.location,
         code: updateAppointmentInput.code,
         roomType: updateAppointmentInput.roomType,
+        roomMode: updateAppointmentInput.roomMode,
         roomEnvironment: updateAppointmentInput.roomEnvironment,
         guestList: guestList,
       },
@@ -293,12 +295,14 @@ export class AppointmentsService {
       startTime: Date;
       endTime: Date;
       roomType: string;
+      roomMode: string;
       roomEnvironment: string;
     },
   ) {
     const jwt = {
       email: email,
       code: appointment.code,
+      roomMode: appointment.roomMode ?? '',
       roomType: appointment.roomType ?? '',
       roomEnvironment: appointment.roomEnvironment ?? '',
       validOn: appointment.startTime,

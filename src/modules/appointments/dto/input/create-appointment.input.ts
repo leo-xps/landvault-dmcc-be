@@ -38,5 +38,9 @@ export class CreateAppointmentInput {
 
   @IsString()
   @IsOptional()
+  roomMode?: string;
+
+  @IsString()
+  @IsOptional()
   roomEnvironment?: string;
 }

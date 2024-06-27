@@ -8,6 +8,7 @@ export class AppointmentOutput {
   endTime?: string;
   code?: string;
   roomType?: string;
+  roomMode?: string;
   roomEnvironment?: string;
   participants?: string[];
   guestList?: string[];
