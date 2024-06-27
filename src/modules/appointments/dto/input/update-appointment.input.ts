@@ -43,5 +43,9 @@ export class UpdateAppointmentInput {
 
   @IsString()
   @IsOptional()
+  roomMode?: string;
+
+  @IsString()
+  @IsOptional()
   roomEnvironment?: string;
 }

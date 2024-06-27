@@ -768,6 +768,7 @@ export class DbUsersService {
           roomName: data.name,
           roomCode: data.code,
           roomType: data.roomType,
+          roomMode: data.roomMode,
           roomEnvironment: data.roomEnvironment,
         },
       };
@@ -813,6 +814,7 @@ export class DbUsersService {
           roomName: data.name,
           roomCode: data.code,
           roomType: data.roomType,
+          roomMode: data.roomMode,
           roomEnvironment: data.roomEnvironment,
         },
       };
@@ -846,6 +848,7 @@ export class DbUsersService {
           accessToken,
           roomCode: data.code,
           roomType: data.roomType,
+          roomMode: data.roomMode,
           roomEnvironment: data.roomEnvironment,
         },
       };
@@ -870,6 +873,7 @@ export class DbUsersService {
       endTime: Date;
       roomName?: string;
       roomType: string;
+      roomMode: string;
       roomEnvironment: string;
       guestAppointment?: boolean;
       valid?: boolean;
@@ -882,6 +886,7 @@ export class DbUsersService {
       name: appointment.roomName ?? '',
       code: appointment.code,
       roomType: appointment.roomType ?? '',
+      roomMode: appointment.roomMode ?? '',
       roomEnvironment: appointment.roomEnvironment ?? '',
       validOn: appointment.startTime,
       expiredOn: appointment.endTime,
@@ -928,6 +933,7 @@ export class DbUsersService {
   async roomGuestLogin(
     tokenSeed: string,
     roomType: string,
+    roomMode: string,
     roomEnvironment: string,
   ) {
     // const token = await this.generateGuestToken();
@@ -943,6 +949,7 @@ export class DbUsersService {
         code,
         roomName: `Scheduled Appointment Meeting`,
         roomType: roomType,
+        roomMode: roomMode,
         roomEnvironment: roomEnvironment,
         startTime: now,
         endTime: endTime,

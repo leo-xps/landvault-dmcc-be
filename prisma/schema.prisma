@@ -214,6 +214,7 @@ model Appointments {
   status          String
   title           String
   code            String             @unique
+  roomMode        String?            @map("room_mode")
   roomType        String?            @map("room_type")
   roomEnvironment String?            @map("room_environment")
   location        String?
