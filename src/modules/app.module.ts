@@ -36,6 +36,7 @@ import { NotesModule } from './notes/notes.module';
 import { PriceApiModule } from './price-api/price-api.module';
 import { PriceTickerModule } from './price-ticker/price-ticker.module';
 import { PuppeteerModule } from './puppeteer/puppeteer.module';
+import { RatingsModule } from './ratings/ratings.module';
 import { RpmModule } from './rpm/rpm.module';
 import { ServerTokensModule } from './server-tokens/server-tokens.module';
 import { UsersModule } from './users/users.module';
@@ -93,6 +94,7 @@ import { UsersModule } from './users/users.module';
     LeaderboardCryptoModule,
     NotesModule,
     BrevoSmsModule,
+    RatingsModule,
   ],
   controllers: [],
   providers: [

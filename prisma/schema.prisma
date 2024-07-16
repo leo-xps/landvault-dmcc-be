@@ -278,3 +278,13 @@ model Leaderboard {
   User      Users    @relation(fields: [userID], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now()) @map("created_at")
 }
+
+model Survey {
+  id        String   @id @default(cuid())
+  userID    String   @map("user_id")
+  field     String
+  data      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("survey")
+}
