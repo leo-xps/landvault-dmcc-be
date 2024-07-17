@@ -20,6 +20,14 @@ export class RegisterUserInput {
 
   @IsOptional()
   @IsString()
+  companyInfo?: string;
+
+  @IsOptional()
+  @IsString()
+  companyServices?: string;
+
+  @IsOptional()
+  @IsString()
   position?: string;
 
   @IsOptional()

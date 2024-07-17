@@ -58,6 +58,14 @@ export class UpdateUserInfo {
   company?: string;
 
   @IsOptional()
+  @IsString()
+  companyInfo?: string;
+
+  @IsOptional()
+  @IsString()
+  companyServices?: string;
+
+  @IsOptional()
   @IsString({
     each: true,
   })

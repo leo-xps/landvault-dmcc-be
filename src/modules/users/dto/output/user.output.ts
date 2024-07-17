@@ -10,6 +10,8 @@ export class UserOutput {
   firstName: string;
   lastName: string;
   company: string;
+  companyInfo: string;
+  companyServices: string;
   position: string;
   phoneNumber: string;
   tags: string[];

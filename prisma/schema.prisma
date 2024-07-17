@@ -35,6 +35,8 @@ model Users {
   phoneNumber     String?            @map("phone_number")
   position        String?
   company         String?
+  companyInfo     String?            @map("company_info")
+  companyServices String?            @map("company_services")
   description     String?
   dmccMember      Boolean            @default(false) @map("dmcc_member")
   dmccID          String?            @map("dmcc_id")
