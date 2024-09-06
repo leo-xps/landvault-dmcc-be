@@ -1,13 +1,9 @@
 import { DbService } from '@modules/db/db.service';
 import { Injectable } from '@nestjs/common';
-import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class ChatListService {
-  constructor(
-    private readonly db: DbService,
-    private readonly i18n: I18nService,
-  ) {}
+  constructor(private readonly db: DbService) {}
 
   // set
   async setChatListData(chatID: string, data: string) {
@@ -36,6 +32,27 @@ export class ChatListService {
         },
       });
     }
+  }
+
+  async deleteChatListData(chatID: string) {
+    // if chatHistory exists, update it
+    const chatHistory = await this.db.chatHistory.findFirst({
+      where: {
+        roomID: chatID,
+      },
+    });
+
+    if (chatHistory) {
+      return this.db.chatHistory.delete({
+        where: {
+          id: chatHistory.id,
+        },
+      });
+    }
+  }
+
+  async resetChatList() {
+    return this.db.chatHistory.deleteMany({});
   }
 
   // get

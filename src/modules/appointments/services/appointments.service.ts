@@ -1,4 +1,4 @@
-import { APP_URL, BASE_URL, ROOM_URL } from '@common/environment';
+import { ROOM_URL } from '@common/environment';
 import { BrevoMailerService } from '@modules/brevo-mailer/services/brevo-mailer.service';
 import { DbService } from '@modules/db/db.service';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
@@ -119,6 +119,7 @@ export class AppointmentsService {
             ? createAppointmentInput.code
             : uniqueCode,
           roomType: createAppointmentInput.roomType,
+          roomMode: createAppointmentInput.roomMode,
           roomEnvironment: createAppointmentInput.roomEnvironment,
           guestList: guestList,
         },
@@ -196,6 +197,7 @@ export class AppointmentsService {
         location: updateAppointmentInput.location,
         code: updateAppointmentInput.code,
         roomType: updateAppointmentInput.roomType,
+        roomMode: updateAppointmentInput.roomMode,
         roomEnvironment: updateAppointmentInput.roomEnvironment,
         guestList: guestList,
       },
@@ -260,9 +262,9 @@ export class AppointmentsService {
     const userAppointments = await this.db.userAppointments.findMany({
       include: {
         user: {
-          select: {
-            email: true,
-          },
+          // select: {
+          //   email: true,
+          // },
         },
       },
     });
@@ -293,12 +295,14 @@ export class AppointmentsService {
       startTime: Date;
       endTime: Date;
       roomType: string;
+      roomMode: string;
       roomEnvironment: string;
     },
   ) {
     const jwt = {
       email: email,
       code: appointment.code,
+      roomMode: appointment.roomMode ?? '',
       roomType: appointment.roomType ?? '',
       roomEnvironment: appointment.roomEnvironment ?? '',
       validOn: appointment.startTime,
@@ -312,10 +316,6 @@ export class AppointmentsService {
 
     const urlObject = new URL(ROOM_URL);
     urlObject.searchParams.append('token', token);
-    urlObject.searchParams.append('webUrl', BASE_URL);
-    urlObject.searchParams.append('appUrl', APP_URL);
-
-    // const URL = `${ROOM_URL}?token=${token}&webUrl=${BASE_URL}&appUrl=${APP_URL}`;
 
     return urlObject.href;
   }

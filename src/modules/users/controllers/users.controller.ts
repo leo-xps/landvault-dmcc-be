@@ -23,7 +23,10 @@ import {
   UpdateUserInfo,
   UpdateUserInput,
 } from '../dto/input/update-user.input';
-import { GetUserRequest } from '../dto/interfaces/getuser.interface';
+import {
+  GetUserInfoByMailRequest,
+  GetUserRequest,
+} from '../dto/interfaces/getuser.interface';
 import { UsersMapper } from '../dto/mapper/users.mapper';
 import { UserOutput } from '../dto/output/user.output';
 import { DbUsersService } from '../services/db-users.service';
@@ -58,6 +61,7 @@ export class UsersController {
   async createUser(
     @Body() registerUserInput: RegisterUserInput,
   ): Promise<UserOutput> {
+    console.log('registerUserInput');
     const data = await this.dbUsersService.registerUser(registerUserInput);
     return UsersMapper.displayOne(data);
   }
@@ -122,9 +126,18 @@ export class UsersController {
     return { token };
   }
 
-  @Get('verify-code')
-  async verify(@Body('code') code: number, @Body('email') email: string) {
-    return await this.dbVerificationService.validateOTP(code, email);
+  @Get('send-2fa')
+  @UseGuards(RestAuthGuard)
+  async send2FA(@CurrentUser() user: any, @Query('method') method: string) {
+    return await this.dbUsersService.create2FARequest(
+      user.id,
+      method ?? 'email',
+    );
+  }
+
+  @Post('verify-2fa')
+  async verify2FA(@Body('code') code: string, @Body('email') email: string) {
+    return await this.dbVerificationService.validateOTP(Number(code), email);
   }
 
   @Post('send-forgot-password')
@@ -178,18 +191,47 @@ export class UsersController {
     return await this.dbUsersService.expressLogin(token);
   }
 
+  @Post('uid-login')
+  async uidLogin(@Body('uid') uid: string) {
+    // return login
+    return await this.dbUsersService.uidGuestLogin(uid);
+  }
+
+  @Post('email-login')
+  async emailLogin(
+    @Headers('lv-srv-adm') srvToken: string,
+    @Body('email') email: string,
+  ) {
+    const valid = await this.checkAdminTokenValidity(srvToken);
+    if (!valid) {
+      throw new UnauthorizedException('Invalid Admin Token');
+    }
+    // return login
+    return await this.dbUsersService.emailLogin(email, valid);
+  }
+
+  @Post('claim-account')
+  @UseGuards(RestAuthGuard)
+  async claimAccount(@CurrentUser() user: any, @Body('email') email: string) {
+    // return login
+    return await this.dbUsersService.claimAccount(user.id, email);
+  }
+
   @Get('appointment-join')
   async appointmentLogin(
     @Query('token') token: string,
     @Query('room') room: string,
+    @Query('mode') mode: string,
     @Res() res,
   ) {
     room = room ?? 'lobby_normal';
     const roomType = room.split('_')[0];
-    const roomEnvironment = '';
+    const roomEnvironment = room.split('_')[1] ?? '';
+    const roomMode = mode ?? 'normal';
     const joinData = await this.dbUsersService.roomGuestLogin(
       token,
       roomType,
+      roomMode,
       roomEnvironment,
     );
 
@@ -198,12 +240,35 @@ export class UsersController {
     return res.redirect(joinData.joinURL);
   }
 
+  @Post('create-2fa-pass')
+  async request_email_validate(
+    @Body('method') method: string,
+    @Body('contact') contact: string,
+  ) {
+    return await this.dbUsersService.create2FAPassRequest(
+      contact,
+      method ?? 'email',
+    );
+  }
+
+  @Post('verify-2fa-pass')
+  async validate_email_validate(
+    @Body('code') code: string,
+    @Body('contact') contact: string,
+  ) {
+    return await this.dbVerificationService.validateOTPPass(
+      Number(code),
+      contact,
+    );
+  }
+
   @Post('create-shareable-link-auto')
   async createRoomAuto(
     @Headers('lv-srv-adm') srvToken: string,
     @Body('roomName') roomName,
     @Body('roomCode') roomCode,
     @Body('roomType') roomType,
+    @Body('roomMode') roomMode,
     @Body('roomEnvironment') roomEnvironment,
   ) {
     const valid = await this.checkAdminTokenValidity(srvToken);
@@ -218,6 +283,7 @@ export class UsersController {
         code: roomCode,
         roomName: roomName,
         roomType: roomType,
+        roomMode: roomMode,
         roomEnvironment: roomEnvironment,
         startTime: now,
         endTime: endTime,
@@ -237,6 +303,7 @@ export class UsersController {
     @Body('roomName') roomName,
     @Body('roomCode') roomCode,
     @Body('roomType') roomType,
+    @Body('roomMode') roomMode,
     @Body('roomEnvironment') roomEnvironment,
   ) {
     const valid = await this.checkAdminTokenValidity(srvToken);
@@ -251,6 +318,7 @@ export class UsersController {
         code: roomCode,
         roomName: roomName,
         roomType: roomType,
+        roomMode: roomMode,
         roomEnvironment: roomEnvironment,
         startTime: now,
         endTime: endTime,
@@ -266,6 +334,12 @@ export class UsersController {
   @Post('get-user-info')
   async getUsersInfo(@Body() data: GetUserRequest) {
     return this.dbUsersService.getUserTradingGame(data);
+  }
+
+  @Post('get-user-info-by-email')
+  async getUsersInfoByMail(@Body() data: GetUserInfoByMailRequest) {
+    const response = this.dbUsersService.getUserInfoByMail(data);
+    return { data: UsersMapper.displayOne(response) };
   }
 
   @Post('update-info')
@@ -285,7 +359,7 @@ export class UsersController {
     @Headers('lv-srv-adm') srvToken: string,
     @Body('data')
     data: {
-      userID: string;
+      email: string;
       dmccMember: boolean;
     }[],
   ) {
@@ -296,7 +370,7 @@ export class UsersController {
     }
 
     for (const item of data) {
-      await this.dbUsersService.setDMCCMember(item.userID, item.dmccMember);
+      await this.dbUsersService.setDMCCMember(item.email, item.dmccMember);
     }
 
     return {

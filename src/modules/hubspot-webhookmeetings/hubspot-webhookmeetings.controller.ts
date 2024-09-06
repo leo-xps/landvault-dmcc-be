@@ -1,4 +1,6 @@
 import {
+  APP_URL,
+  BASE_URL,
   HUBSPOT_LANDVAULT_APP_ID,
   HUBSPOT_LANDVAULT_APP_REDIRECT_URI,
   HUBSPOT_LANDVAULT_APP_SECRET,
@@ -31,5 +33,17 @@ export class HubspotWebhookmeetingsController {
 
     console.log('sending response');
     return 'Ok';
+  }
+
+  @Get('/app')
+  async app(@Res() res, @Query('token') token: string) {
+    const url = `${APP_URL}?token=${token}`;
+    return res.redirect(url);
+  }
+
+  @Get('/web')
+  async web(@Res() res, @Query('token') token: string) {
+    const url = `${BASE_URL}?token=${token}`;
+    return res.redirect(url);
   }
 }

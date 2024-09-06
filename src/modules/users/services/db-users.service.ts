@@ -1,7 +1,8 @@
-import { APP_URL, AUTO_URL, BASE_URL, ROOM_URL } from '@common/environment';
+import { APP_NAME, AUTO_URL, FORCE_2FA, ROOM_URL } from '@common/environment';
 import { sha256HashString } from '@common/utils/hash';
 import { BlacklistedService } from '@modules/blacklisted/services/blacklisted.service';
 import { BrevoMailerService } from '@modules/brevo-mailer/services/brevo-mailer.service';
+import { BrevoSmsService } from '@modules/brevo-sms/services/brevo-sms.service';
 import { DbService } from '@modules/db/db.service';
 import {
   Injectable,
@@ -19,6 +20,7 @@ import {
   UpdateUserInput,
 } from '../dto/input/update-user.input';
 import {
+  GetUserInfoByMailRequest,
   GetUserRequest,
   GetUserResponse,
 } from '../dto/interfaces/getuser.interface';
@@ -34,6 +36,7 @@ export class DbUsersService {
     private readonly blacklistedService: BlacklistedService,
     private readonly verification: DbVerificationService,
     private readonly email: BrevoMailerService,
+    private readonly sms: BrevoSmsService,
   ) {}
 
   @Cron(CronExpression.EVERY_6_HOURS)
@@ -70,12 +73,12 @@ export class DbUsersService {
   }
 
   async registerUser(registerUserInput: RegisterUserInput) {
+    let email = registerUserInput.email.toLowerCase();
+    // remove dmccguest from email
+    email = email.replace('dmccguest', '');
     const userExist = await this.db.users.findFirst({
       where: {
-        OR: [
-          { email: registerUserInput.email.toLowerCase() },
-          { username: registerUserInput.username },
-        ],
+        OR: [{ email: email }, { username: registerUserInput.username }],
       },
     });
 
@@ -87,7 +90,28 @@ export class DbUsersService {
       );
     }
 
-    let code;
+    // let code;
+
+    if (FORCE_2FA) {
+      const accessToken = registerUserInput.token2FA;
+
+      if (!accessToken) {
+        throw new UnprocessableEntityException(
+          this.i18n.translate('user.INVALID_2FA_TOKEN'),
+        );
+      }
+
+      const verified = await this.verification.validateOTPToken(accessToken, {
+        email: registerUserInput.email,
+        phone: registerUserInput.phoneNumber,
+      });
+
+      if (!verified.verified) {
+        throw new UnprocessableEntityException(
+          this.i18n.translate('user.INVALID_2FA_TOKEN'),
+        );
+      }
+    }
 
     if (registerUserInput.guestId) {
       const guestData = await this.db.users.findUnique({
@@ -111,9 +135,19 @@ export class DbUsersService {
         where: { id: registerUserInput.guestId },
         data: {
           email: registerUserInput.email.toLowerCase(),
+          username: registerUserInput?.username,
           password: await this.hashPassword(registerUserInput.password),
           phoneNumber: registerUserInput?.phoneNumber,
           isGuest: false,
+          dmccID: registerUserInput?.dmccID,
+          dmccEmail: registerUserInput?.dmccEmail,
+          company: registerUserInput?.company,
+          companyInfo: registerUserInput?.companyInfo,
+          companyServices: registerUserInput?.companyServices,
+          position: registerUserInput?.position,
+          avatarUrl: registerUserInput?.avatarUrl,
+          location: registerUserInput?.location,
+          description: registerUserInput?.description,
           // guestToken: null,
         },
       });
@@ -126,24 +160,31 @@ export class DbUsersService {
           phoneNumber: registerUserInput?.phoneNumber,
           dmccID: registerUserInput?.dmccID,
           dmccEmail: registerUserInput?.dmccEmail,
+          company: registerUserInput?.company,
+          companyInfo: registerUserInput?.companyInfo,
+          companyServices: registerUserInput?.companyServices,
+          position: registerUserInput?.position,
+          description: registerUserInput?.description,
+          avatarUrl: registerUserInput?.avatarUrl,
+          location: registerUserInput?.location,
         },
       });
       //optional
-      code = await this.verification.createOTP(
-        registerUserInput.email.toLowerCase(),
-        undefined,
-      );
+      // code = await this.verification.createOTP(
+      //   registerUserInput.email.toLowerCase(),
+      //   undefined,
+      // );
     }
 
     //optional sending email verification
-    const emailData = {
-      email: registerUserInput.email.toLowerCase(),
-      subject: 'Registration',
-      fileLocation: 'dist/template/email-registration-verification.hbs',
-      params: {
-        OTP: code.code,
-      },
-    };
+    // const emailData = {
+    //   email: registerUserInput.email.toLowerCase(),
+    //   subject: 'Registration',
+    //   fileLocation: 'dist/template/email-registration-verification.hbs',
+    //   params: {
+    //     OTP: code.code,
+    //   },
+    // };
 
     // await this.email.sendEmailFromTemplate(
     //   emailData.email,
@@ -240,7 +281,126 @@ export class DbUsersService {
       },
     });
 
-    return { accessToken };
+    const decodedAccessToken = this.jwtService.decode(
+      accessToken,
+    ) as PayloadInterface;
+
+    return { accessToken, uid: newGuest.id, decoded: decodedAccessToken };
+  }
+
+  async uidGuestLogin(uid: string) {
+    const uidGuest = await this.db.users.findFirst({
+      where: {
+        isGuest: true,
+        id: uid,
+      },
+    });
+
+    if (!uidGuest) {
+      throw new NotFoundException(this.i18n.translate('user.USER_NOT_FOUND'));
+    }
+
+    const payload: PayloadInterface = {
+      uid: uidGuest.id,
+      id: uidGuest.id,
+      email: uidGuest.email,
+    };
+
+    const accessToken: string = this.jwtService.sign(payload, {
+      expiresIn: '99y',
+    });
+
+    const decodedAccessToken = this.jwtService.decode(
+      accessToken,
+    ) as PayloadInterface;
+
+    return { accessToken, uid: uidGuest.id, decoded: decodedAccessToken };
+  }
+
+  async emailLogin(email: string, isAdmin?: boolean) {
+    const uidUser = await this.db.users.findFirst({
+      where: {
+        isGuest: isAdmin ? undefined : true,
+        email: email.toLowerCase(),
+      },
+    });
+
+    if (!uidUser) {
+      throw new NotFoundException(this.i18n.translate('user.USER_NOT_FOUND'));
+    }
+
+    const payload: PayloadInterface = {
+      uid: uidUser.id,
+      id: uidUser.id,
+      email: uidUser.email,
+    };
+
+    const accessToken: string = this.jwtService.sign(payload, {
+      expiresIn: '99y',
+    });
+
+    const decodedAccessToken = this.jwtService.decode(
+      accessToken,
+    ) as PayloadInterface;
+
+    return { accessToken, uid: uidUser.id, decoded: decodedAccessToken };
+  }
+
+  async claimAccount(userID: string, email: string) {
+    let baseEmail = email.split('@')[0].toLowerCase();
+    // remove + and everything after it
+    const baseEmailExtension = baseEmail.split('+')[1];
+    baseEmail = baseEmail.split('+')[0];
+    const domain = email.split('@')[1];
+    const guestEmail =
+      `${baseEmail}+dmccguest${baseEmailExtension}@${domain}`.toLowerCase();
+    let emailGuest = await this.db.users.findFirst({
+      where: {
+        email: guestEmail,
+      },
+    });
+
+    if (emailGuest && !emailGuest.isGuest) {
+      return {
+        message: 'Account already claimed',
+        accessToken: '',
+        uid: '',
+      };
+    }
+
+    if (!emailGuest) {
+      emailGuest = await this.db.users.update({
+        where: {
+          id: userID,
+        },
+        data: {
+          isGuest: true,
+          username: baseEmail,
+          email: guestEmail,
+        },
+      });
+    }
+
+    const payload: PayloadInterface = {
+      uid: emailGuest.id,
+      id: emailGuest.id,
+      email: emailGuest.email,
+    };
+
+    const accessToken: string = this.jwtService.sign(payload, {
+      expiresIn: '99y',
+    });
+
+    const decodedAccessToken = this.jwtService.decode(
+      accessToken,
+    ) as PayloadInterface;
+
+    return {
+      accessToken,
+      uid: emailGuest.id,
+      decoded: decodedAccessToken,
+      message: '',
+    };
   }
 
   async forgotPasswordSendEmail(email: string) {
@@ -401,8 +561,13 @@ export class DbUsersService {
         phoneNumber: updateUserInput?.phoneNumber,
         position: updateUserInput?.position,
         company: updateUserInput?.company,
+        companyInfo: updateUserInput?.companyInfo,
+        companyServices: updateUserInput?.companyServices,
         dmccID: updateUserInput?.dmccID,
         dmccEmail: updateUserInput?.dmccEmail,
+        avatarUrl: updateUserInput?.avatarUrl,
+        location: updateUserInput?.location,
+        description: updateUserInput?.description,
       },
     });
 
@@ -524,7 +689,12 @@ export class DbUsersService {
         lastName: user.lastName,
         model: user.AvaturnModels?.[0]?.modelID ?? '',
         company: user.company,
+        companyInfo: user.companyInfo,
+        companyServices: user.companyServices,
         position: user.position,
+        description: user.description,
+        avatarUrl: user.avatarUrl,
+        location: user.location,
         tags: userTags,
         matchingTags,
       };
@@ -606,6 +776,7 @@ export class DbUsersService {
           roomName: data.name,
           roomCode: data.code,
           roomType: data.roomType,
+          roomMode: data.roomMode,
           roomEnvironment: data.roomEnvironment,
         },
       };
@@ -651,6 +822,7 @@ export class DbUsersService {
           roomName: data.name,
           roomCode: data.code,
           roomType: data.roomType,
+          roomMode: data.roomMode,
           roomEnvironment: data.roomEnvironment,
         },
       };
@@ -684,6 +856,7 @@ export class DbUsersService {
           accessToken,
           roomCode: data.code,
           roomType: data.roomType,
+          roomMode: data.roomMode,
           roomEnvironment: data.roomEnvironment,
         },
       };
@@ -708,6 +881,7 @@ export class DbUsersService {
       endTime: Date;
       roomName?: string;
       roomType: string;
+      roomMode: string;
       roomEnvironment: string;
       guestAppointment?: boolean;
       valid?: boolean;
@@ -720,6 +894,7 @@ export class DbUsersService {
       name: appointment.roomName ?? '',
       code: appointment.code,
       roomType: appointment.roomType ?? '',
+      roomMode: appointment.roomMode ?? '',
       roomEnvironment: appointment.roomEnvironment ?? '',
       validOn: appointment.startTime,
       expiredOn: appointment.endTime,
@@ -730,7 +905,7 @@ export class DbUsersService {
     };
 
     const token = this.jwtService.sign(jwt, {
-      expiresIn: '30d',
+      expiresIn: '9999d',
     });
 
     const bURL = auto ? AUTO_URL : ROOM_URL;
@@ -750,16 +925,12 @@ export class DbUsersService {
         'token',
         `${this.shortedTokenPrefix}${shortedEntry.code}`,
       );
-      urlObject.searchParams.append('webUrl', BASE_URL);
-      urlObject.searchParams.append('appUrl', APP_URL);
 
       return urlObject;
     }
 
     const urlObject = new URL(bURL);
     urlObject.searchParams.append('token', token);
-    urlObject.searchParams.append('webUrl', BASE_URL);
-    urlObject.searchParams.append('appUrl', APP_URL);
 
     const urlLink = urlObject.href;
 
@@ -770,6 +941,7 @@ export class DbUsersService {
   async roomGuestLogin(
     tokenSeed: string,
     roomType: string,
+    roomMode: string,
     roomEnvironment: string,
   ) {
     // const token = await this.generateGuestToken();
@@ -785,6 +957,7 @@ export class DbUsersService {
         code,
         roomName: `Scheduled Appointment Meeting`,
         roomType: roomType,
+        roomMode: roomMode,
         roomEnvironment: roomEnvironment,
         startTime: now,
         endTime: endTime,
@@ -816,6 +989,20 @@ export class DbUsersService {
   }
 
   // trading game
+
+  async getUserInfoByMail(data: GetUserInfoByMailRequest) {
+    const user = await this.db.users.findFirst({
+      where: {
+        email: data.email,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(this.i18n.translate('user.USER_NOT_FOUND'));
+    }
+
+    return user;
+  }
 
   async getUserTradingGame(data: GetUserRequest): Promise<GetUserResponse> {
     const response: GetUserResponse = {
@@ -863,14 +1050,84 @@ export class DbUsersService {
 
   // dmcc memebr
 
-  async setDMCCMember(userID: string, dmccMember: boolean) {
+  async setDMCCMember(email: string, dmccMember: boolean) {
     await this.db.users.update({
-      where: { id: userID },
+      where: {
+        email,
+      },
       data: {
         dmccMember,
       },
     });
 
     return { data: 'User updated successfully' };
+  }
+
+  async create2FARequest(contact: string, method: 'email' | 'sms' | string) {
+    const otp = await this.verification.createOTP(undefined, contact);
+
+    if (method === 'email') {
+      console.log('Sending email');
+      await this.sendEmailOTP(otp.email, otp.otp.code.toString());
+    } else if (method === 'sms') {
+      console.log('Sending sms');
+      await this.sendPhoneOTP(contact, otp.otp.code.toString());
+    }
+
+    return { data: '2FA Request sent successfully' };
+  }
+
+  async create2FAPassRequest(
+    contact: string,
+    method: 'email' | 'sms' | string,
+  ) {
+    const otp = await this.verification.createOTPPass(contact, method);
+
+    if (method === 'email') {
+      console.log('Sending email');
+      await this.sendEmailOTP(contact, otp.otp.code.toString());
+    } else if (method === 'sms') {
+      console.log('Sending sms');
+      // if (!contact.startsWith('+')) {
+      //   throw new HttpException(
+      //     "Invalid phone number. Must start with '+'",
+      //     400,
+      //   );
+      // }
+      await this.sendPhoneOTP(contact, otp.otp.code.toString());
+    }
+
+    return { data: '2FA Request sent successfully' };
+  }
+
+  async sendEmailOTP(emailReceipient: string, otpcode: string) {
+    //optional sending email verification
+    const emailData = {
+      email: emailReceipient.toLowerCase(),
+      subject: `Verify Your Account`,
+      fileLocation: 'dist/template/email-invite.hbs',
+      params: {
+        otpcode,
+        time_date: new Date().toLocaleString(),
+      },
+    };
+
+    // console.log(JSON.stringify(emailData));
+
+    await this.email.sendEmailByBrevoTemplate(
+      emailData.email,
+      emailData.subject,
+      process.env.MAILER_BREVO_OTP_CODE || '7',
+      emailData.params,
+    );
+    return true;
+  }
+
+  async sendPhoneOTP(phoneNumber: string, otpcode: string) {
+    await this.sms.sendSMS({
+      sender: 'OTP',
+      recipient: phoneNumber,
+      content: `To proceed with your registration with ${APP_NAME}.  Here is your verification code: ${otpcode}. This code will be vald for 5 minutes. Please do not share this code with anyone.`,
+    });
   }
 }

@@ -16,6 +16,26 @@ export class RegisterUserInput {
 
   @IsOptional()
   @IsString()
+  company?: string;
+
+  @IsOptional()
+  @IsString()
+  companyInfo?: string;
+
+  @IsOptional()
+  @IsString()
+  companyServices?: string;
+
+  @IsOptional()
+  @IsString()
+  position?: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsString()
   dmccID?: string;
 
   @IsOptional()
@@ -27,5 +47,18 @@ export class RegisterUserInput {
   password: string;
 
   @IsOptional()
+  @IsString()
+  avatarUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  location?: string;
+
+  @IsOptional()
+  @IsString()
   guestId: string;
+
+  @IsOptional()
+  @IsString()
+  token2FA?: string;
 }

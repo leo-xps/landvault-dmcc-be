@@ -13,6 +13,31 @@ export class ChatListController {
     return this.serverAdminToken.validateToken(token);
   }
 
+  // delete
+  @Post('/delete/:id')
+  async deleteChatListData(
+    @Headers('lv-srv-adm') srvToken: string,
+    @Param('id') chatID: string,
+  ) {
+    const valid = await this.checkAdminTokenValidity(srvToken);
+
+    if (!valid) {
+      return { error: 'Invalid server admin token' };
+    }
+    return this.chat.deleteChatListData(chatID);
+  }
+
+  // delete
+  @Post('/reset')
+  async resetChatListData(@Headers('lv-srv-adm') srvToken: string) {
+    const valid = await this.checkAdminTokenValidity(srvToken);
+
+    if (!valid) {
+      return { error: 'Invalid server admin token' };
+    }
+    return this.chat.resetChatList();
+  }
+
   // set
   @Post(':id')
   async setChatListData(

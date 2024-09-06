@@ -60,7 +60,6 @@ export class NestCacheService {
     if (cachedValue) {
       return cachedValue as T;
     }
-
     const fetchedValue = await fetchFunction();
     await this.set(key, fetchedValue, ttl);
     return fetchedValue;

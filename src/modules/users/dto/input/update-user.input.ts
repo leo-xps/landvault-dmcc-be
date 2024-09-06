@@ -51,11 +51,31 @@ export class UpdateUserInfo {
 
   @IsOptional()
   @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsString()
   company?: string;
+
+  @IsOptional()
+  @IsString()
+  companyInfo?: string;
+
+  @IsOptional()
+  @IsString()
+  companyServices?: string;
 
   @IsOptional()
   @IsString({
     each: true,
   })
   tags?: string[];
+
+  @IsOptional()
+  @IsString()
+  avatarUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  location?: string;
 }

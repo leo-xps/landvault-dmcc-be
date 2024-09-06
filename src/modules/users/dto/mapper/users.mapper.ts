@@ -26,14 +26,20 @@ export class UsersMapper {
       exp: user.exp,
       firstName: user.firstName,
       lastName: user.lastName,
-      company: user.company,
       phoneNumber: user.phoneNumber,
+      company: user.company,
+      companyInfo: user.companyInfo,
+      companyServices: user.companyServices,
       position: user.position,
       tags: user.TagsInUser?.map((tag) => tag.tag.tag) ?? [],
       dmccMember: user.dmccMember,
       dmccID: user.dmccID,
       dmccEmail: user.dmccEmail,
+      verified: user.verified,
+      avatarUrl: user.avatarUrl,
+      location: user.location,
       canMatch,
+      description: user.description,
     };
   }
   static displayAll(users: any[]): UserOutput[] {

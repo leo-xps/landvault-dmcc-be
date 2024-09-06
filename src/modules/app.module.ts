@@ -20,6 +20,7 @@ import { AppointmentsModule } from './appointments/appointments.module';
 import { AvaturnModule } from './avaturn/avaturn.module';
 import { BlacklistedModule } from './blacklisted/blacklisted.module';
 import { BrevoMailerModule } from './brevo-mailer/brevo-mailer.module';
+import { BrevoSmsModule } from './brevo-sms/brevo-sms.module';
 import { CalendlyModule } from './calendly/calendly.module';
 import { ChatListModule } from './chat-list/chat-list.module';
 import { CsvGenModule } from './csv-gen/csv-gen.module';
@@ -29,9 +30,13 @@ import { FileModule } from './file/file.module';
 import { GameDataModule } from './game-data/game-data.module';
 import { HealthModule } from './health/health.module';
 import { HubspotWebhookmeetingsModule } from './hubspot-webhookmeetings/hubspot-webhookmeetings.module';
+import { LeaderboardCryptoModule } from './leaderboard-crypto/leaderboard-crypto.module';
 import { LeaderboardModule } from './leaderboard/leaderboard.module';
+import { NotesModule } from './notes/notes.module';
+import { PriceApiModule } from './price-api/price-api.module';
 import { PriceTickerModule } from './price-ticker/price-ticker.module';
 import { PuppeteerModule } from './puppeteer/puppeteer.module';
+import { RatingsModule } from './ratings/ratings.module';
 import { RpmModule } from './rpm/rpm.module';
 import { ServerTokensModule } from './server-tokens/server-tokens.module';
 import { UsersModule } from './users/users.module';
@@ -85,6 +90,11 @@ import { UsersModule } from './users/users.module';
     LeaderboardModule,
     AdsModule,
     FileModule,
+    PriceApiModule,
+    LeaderboardCryptoModule,
+    NotesModule,
+    BrevoSmsModule,
+    RatingsModule,
   ],
   controllers: [],
   providers: [

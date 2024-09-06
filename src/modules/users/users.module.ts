@@ -2,6 +2,7 @@ import { JwtStrategy } from '@common/auth/strategy/jwt.strategy';
 import { JWT_EXPIRATION, JWT_SECRET } from '@common/environment';
 import { BlacklistedModule } from '@modules/blacklisted/blacklisted.module';
 import { BrevoMailerModule } from '@modules/brevo-mailer/brevo-mailer.module';
+import { BrevoSmsModule } from '@modules/brevo-sms/brevo-sms.module';
 import { DbModule } from '@modules/db/db.module';
 import { ServerTokensModule } from '@modules/server-tokens/server-tokens.module';
 import { Module } from '@nestjs/common';
@@ -25,6 +26,7 @@ import { DbVerificationService } from './services/verification.service';
     BlacklistedModule,
     BrevoMailerModule,
     ServerTokensModule,
+    BrevoSmsModule,
   ],
   controllers: [UsersController],
   providers: [JwtStrategy, DbUsersService, DbVerificationService],

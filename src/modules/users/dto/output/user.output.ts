@@ -10,6 +10,8 @@ export class UserOutput {
   firstName: string;
   lastName: string;
   company: string;
+  companyInfo: string;
+  companyServices: string;
   position: string;
   phoneNumber: string;
   tags: string[];
@@ -17,4 +19,8 @@ export class UserOutput {
   dmccMember: boolean;
   dmccID: string;
   dmccEmail: string;
+  verified: boolean;
+  avatarUrl: string;
+  location: string;
+  description: string;
 }

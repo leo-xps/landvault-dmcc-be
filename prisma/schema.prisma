@@ -15,6 +15,8 @@ model Users {
   email           String?            @unique
   username        String?            @unique
   password        String?
+  avatarUrl       String?            @map("avatar_url")
+  location        String?            @map("location")
   isGuest         Boolean            @default(false) @map("is_guest")
   createdAt       DateTime?          @default(now()) @map("created_at")
   updatedAt       DateTime?          @updatedAt @map("updated_at")
@@ -33,20 +35,39 @@ model Users {
   phoneNumber     String?            @map("phone_number")
   position        String?
   company         String?
+  companyInfo     String?            @map("company_info")
+  companyServices String?            @map("company_services")
+  description     String?
   dmccMember      Boolean            @default(false) @map("dmcc_member")
   dmccID          String?            @map("dmcc_id")
   dmccEmail       String?            @map("dmcc_email")
   TagsInUser      TagsInUser[]
   Leaderboard     Leaderboard[]
+  Notes           Notes[]
 
   @@map("users")
 }
 
+model Notes {
+  id        String    @id @default(cuid())
+  title     String?
+  data      String?
+  metadata  String?
+  deleted   Boolean   @default(false)
+  deletedAt DateTime? @map("deleted_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  user      Users     @relation(fields: [userID], references: [id], onDelete: Cascade)
+  userID    String
+
+  @@map("notes")
+}
+
 model TagsInUser {
   id        String   @id @default(cuid())
-  user      Users    @relation(fields: [userID], references: [id])
+  user      Users    @relation(fields: [userID], references: [id], onDelete: Cascade)
   userID    String   @map("user_id")
-  tag       UserTags @relation(fields: [tagID], references: [id])
+  tag       UserTags @relation(fields: [tagID], references: [id], onDelete: Cascade)
   tagID     String   @map("tag_id")
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -80,7 +101,7 @@ model RPMModels {
   deletedAt   DateTime? @map("deleted_at")
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
-  user        Users     @relation(fields: [userID], references: [id])
+  user        Users     @relation(fields: [userID], references: [id], onDelete: Cascade)
   userID      String
 
   @@map("rpm_models")
@@ -96,7 +117,7 @@ model AvaturnModels {
   deletedAt   DateTime? @map("deleted_at")
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
-  user        Users     @relation(fields: [userID], references: [id])
+  user        Users     @relation(fields: [userID], references: [id], onDelete: Cascade)
   userID      String
 
   @@map("avaturn_models")
@@ -119,9 +140,9 @@ model Rooms {
 
 model RoomMembers {
   id        String   @id @default(cuid())
-  Room      Rooms    @relation(fields: [roomID], references: [id])
+  Room      Rooms    @relation(fields: [roomID], references: [id], onDelete: Cascade)
   roomID    String   @map("room_id")
-  User      Users    @relation(fields: [userID], references: [id])
+  User      Users    @relation(fields: [userID], references: [id], onDelete: Cascade)
   userID    String   @map("user_id")
   role      String
   createdAt DateTime @default(now()) @map("created_at")
@@ -132,7 +153,7 @@ model RoomMembers {
 
 model AgoraChatUserID {
   id        String   @id @default(cuid())
-  User      Users    @relation(fields: [userID], references: [id])
+  User      Users    @relation(fields: [userID], references: [id], onDelete: Cascade)
   userID    String   @map("user_id")
   agoraID   String   @unique
   createdAt DateTime @default(now()) @map("created_at")
@@ -174,9 +195,18 @@ model Otp {
   token     String
   createdAt DateTime @default(now()) @map("created_at")
 
-  user Users @relation(fields: [userID], references: [id])
+  user Users @relation(fields: [userID], references: [id], onDelete: Cascade)
 
   @@map("otp")
+}
+
+model OtpPass {
+  id        String   @id @default(cuid())
+  code      Int
+  token     String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("otp_pass")
 }
 
 model Appointments {
@@ -186,6 +216,7 @@ model Appointments {
   status          String
   title           String
   code            String             @unique
+  roomMode        String?            @map("room_mode")
   roomType        String?            @map("room_type")
   roomEnvironment String?            @map("room_environment")
   location        String?
@@ -206,8 +237,8 @@ model UserAppointments {
   userId        String @map("user_id")
   appointmentId String @map("appoinment_id")
 
-  user        Users        @relation(fields: [userId], references: [id])
-  appointment Appointments @relation(fields: [appointmentId], references: [id])
+  user        Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointment Appointments @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
 
   @@map("user_appointments")
 }
@@ -246,6 +277,16 @@ model Leaderboard {
   userID    String   @map("user_id")
   nickname  String?
   email     String?
-  User      Users    @relation(fields: [userID], references: [id])
+  User      Users    @relation(fields: [userID], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now()) @map("created_at")
+}
+
+model Survey {
+  id        String   @id @default(cuid())
+  userID    String   @map("user_id")
+  field     String
+  data      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("survey")
 }

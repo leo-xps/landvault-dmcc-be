@@ -1,4 +1,9 @@
-import { CHATBASE_APIKEY } from '@common/environment';
+import {
+  APP_NAME,
+  CHATBASE_APIKEY,
+  CHATBASE_MODELID,
+  SERVER_URL,
+} from '@common/environment';
 import { BrevoMailerService } from '@modules/brevo-mailer/services/brevo-mailer.service';
 import { DbService } from '@modules/db/db.service';
 import { HttpService } from '@nestjs/axios';
@@ -32,7 +37,7 @@ export class AiChatService {
               { content: 'How can I help you?', role: 'assistant' },
               { content: body.message, role: 'user' },
             ],
-            chatbotId: 'gsMDvLM9QJ0EgpZUZ25B0',
+            chatbotId: CHATBASE_MODELID,
             // stream: false,
             // temperature: 0,
             // model: 'gpt-3.5-turbo',
@@ -72,7 +77,7 @@ export class AiChatService {
               { content: 'How can I help you?', role: 'assistant' },
               { content: body.message, role: 'user' },
             ],
-            chatbotId: 'gsMDvLM9QJ0EgpZUZ25B0',
+            chatbotId: CHATBASE_MODELID,
             stream: true,
             conversationId: userId,
           },
@@ -200,13 +205,14 @@ export class AiChatService {
     //optional sending email verification
     const emailData = {
       email: emailReceipient.toLowerCase(),
-      subject: 'DMCC Sales AI Chat History',
+      subject: `${APP_NAME} Sales AI Chat History`,
       fileLocation: 'dist/template/chat-template.hbs',
       params: {
         id: chatID,
         date: new Date(chatDate).toLocaleString(),
         messages: chatLog,
-        bookurl: `${process.env.SERVER_URL}/api/appointment/hubspot`,
+        bookurl: `${SERVER_URL}/api/appointment/hubspot`,
+        appname: APP_NAME,
       },
     };
 

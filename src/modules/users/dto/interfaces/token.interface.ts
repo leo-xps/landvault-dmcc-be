@@ -3,6 +3,7 @@ interface Token {
   name: string;
   code: string;
   roomType: string;
+  roomMode: string;
   roomEnvironment: string;
   validOn: string;
   expiredOn: string;
