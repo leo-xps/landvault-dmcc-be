@@ -5,8 +5,8 @@ import { BrevoMailerService } from '@modules/brevo-mailer/services/brevo-mailer.
 import { BrevoSmsService } from '@modules/brevo-sms/services/brevo-sms.service';
 import { DbService } from '@modules/db/db.service';
 import {
+  BadRequestException,
   Injectable,
-  NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -119,7 +119,9 @@ export class DbUsersService {
       });
 
       if (!guestData) {
-        throw new NotFoundException(this.i18n.translate('user.USER_NOT_FOUND'));
+        throw new BadRequestException(
+          this.i18n.translate('user.USER_NOT_FOUND'),
+        );
       }
 
       //optional
@@ -247,7 +249,7 @@ export class DbUsersService {
       },
     });
     if (!user) {
-      throw new NotFoundException(this.i18n.translate('user.USER_NOT_FOUND'));
+      throw new BadRequestException(this.i18n.translate('user.USER_NOT_FOUND'));
     }
 
     return user;
@@ -297,7 +299,7 @@ export class DbUsersService {
     });
 
     if (!uidGuest) {
-      throw new NotFoundException(this.i18n.translate('user.USER_NOT_FOUND'));
+      throw new BadRequestException(this.i18n.translate('user.USER_NOT_FOUND'));
     }
 
     const payload: PayloadInterface = {
@@ -326,7 +328,7 @@ export class DbUsersService {
     });
 
     if (!uidUser) {
-      throw new NotFoundException(this.i18n.translate('user.USER_NOT_FOUND'));
+      throw new BadRequestException(this.i18n.translate('user.USER_NOT_FOUND'));
     }
 
     const payload: PayloadInterface = {
@@ -408,7 +410,7 @@ export class DbUsersService {
       where: { email: email },
     });
     if (!userExist) {
-      throw new NotFoundException(this.i18n.translate('user.USER_NOT_FOUND'));
+      throw new BadRequestException(this.i18n.translate('user.USER_NOT_FOUND'));
     }
 
     // create jwt to be used for password reset
@@ -469,7 +471,7 @@ export class DbUsersService {
     });
 
     if (!user) {
-      throw new NotFoundException(this.i18n.translate('user.USER_NOT_FOUND'));
+      throw new BadRequestException(this.i18n.translate('user.USER_NOT_FOUND'));
     }
 
     // hash new password
@@ -712,7 +714,7 @@ export class DbUsersService {
     });
 
     if (!user) {
-      throw new NotFoundException(this.i18n.translate('user.USER_NOT_FOUND'));
+      throw new BadRequestException(this.i18n.translate('user.USER_NOT_FOUND'));
     }
 
     await this.db.users.update({
@@ -998,7 +1000,7 @@ export class DbUsersService {
     });
 
     if (!user) {
-      throw new NotFoundException(this.i18n.translate('user.USER_NOT_FOUND'));
+      throw new BadRequestException(this.i18n.translate('user.USER_NOT_FOUND'));
     }
 
     return user;
