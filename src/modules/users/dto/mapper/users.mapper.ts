@@ -2,6 +2,7 @@ import { UserOutput } from '../output/user.output';
 
 export class UsersMapper {
   static displayOne(user: any): UserOutput {
+    // console.log(user);
     if (!user) {
       return undefined;
     }

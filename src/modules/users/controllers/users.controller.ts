@@ -42,7 +42,7 @@ export class UsersController {
     private readonly i18n: I18nService,
     private readonly blacklistedService: BlacklistedService,
     private readonly db: DbService,
-  ) {}
+  ) { }
 
   async checkAdminTokenValidity(token: string) {
     return this.serverAdminToken.validateToken(token);
@@ -338,7 +338,7 @@ export class UsersController {
 
   @Post('get-user-info-by-email')
   async getUsersInfoByMail(@Body() data: GetUserInfoByMailRequest) {
-    const response = this.dbUsersService.getUserInfoByMail(data);
+    const response = await this.dbUsersService.getUserInfoByMail(data);
     return { data: UsersMapper.displayOne(response) };
   }
 
