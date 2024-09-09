@@ -19,7 +19,7 @@ export class UsersMapper {
       uid: user.id,
       id: user.id,
       email: user.email,
-      username: user.username ?? user.email.split('@')[0],
+      username: user.username ?? user.email?.split('@')[0],
       role: user.role ?? 'user',
       isGuest: user.isGuest ?? false,
       iat: user.iat,
